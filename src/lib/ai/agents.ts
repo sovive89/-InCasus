@@ -53,6 +53,9 @@ export const documentAgent = {
   async analyze(_documentId: string): Promise<AIAnalysis> {
     const [analysis] = aiRepository.analyses();
     await new Promise((r) => setTimeout(r, 800));
+    if (!analysis) {
+      throw new Error("Nenhuma análise de demonstração disponível.");
+    }
     return analysis;
   },
 };
@@ -61,6 +64,9 @@ export const researchAgent = {
   async search(question: string): Promise<LegalResearch> {
     await new Promise((r) => setTimeout(r, 1200));
     const [sample] = aiRepository.research();
+    if (!sample) {
+      throw new Error("Nenhuma pesquisa de demonstração disponível.");
+    }
     return { ...sample, id: `r-${Date.now()}`, question, createdAt: new Date().toISOString() };
   },
 };
