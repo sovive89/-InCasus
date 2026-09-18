@@ -26,7 +26,7 @@ const isSameDay = (iso: string, ref = new Date()) => {
   );
 };
 
-/** Regras de negócio do Command Center: "o que precisa da minha atenção?". */
+/** Regras de negócio do Central de Comando: "o que precisa da minha atenção?". */
 export function getAttentionItems(): AttentionItem[] {
   const now = new Date();
   const items: AttentionItem[] = [];

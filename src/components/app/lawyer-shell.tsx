@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 import { getSession, signOut } from "@/lib/auth/session";
 
 const nav = [
-  { to: "/advogado/dashboard", label: "Command Center", icon: LayoutDashboard },
+  { to: "/advogado/dashboard", label: "Central de Comando", icon: LayoutDashboard },
   { to: "/advogado/assistente", label: "Assistente", icon: Bot },
   { to: "/advogado/clientes", label: "Clientes", icon: Users },
   { to: "/advogado/casos", label: "Casos", icon: BriefcaseBusiness },
@@ -51,7 +51,7 @@ export function LawyerShell({ children }: { children: ReactNode }) {
         {mobileOpen && <div className="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm lg:hidden" onClick={() => setMobileOpen(false)}><aside className="h-full w-[82%] max-w-xs border-r border-border bg-sidebar p-4" onClick={(e) => e.stopPropagation()}><div className="mb-8 flex items-center justify-between"><BrandMark /><Button variant="ghost" size="icon" onClick={() => setMobileOpen(false)}><X /></Button></div><nav className="space-y-1">{nav.map((item) => <Link key={item.to} to={item.to} className={cn("flex h-11 items-center gap-3 rounded-md px-3 text-sm text-muted-foreground", location.pathname.startsWith(item.to) && "bg-sidebar-accent text-foreground")}><item.icon className="size-[18px]" />{item.label}</Link>)}</nav></aside></div>}
 
         <div className={cn("transition-[padding] duration-200", collapsed ? "lg:pl-[72px]" : "lg:pl-64")}>
-          <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-border bg-background/90 px-4 backdrop-blur-xl sm:px-6 lg:px-8"><div className="flex items-center gap-3"><Button variant="ghost" size="icon" className="lg:hidden" onClick={() => setMobileOpen(true)} aria-label="Abrir menu"><Menu /></Button><div><span className="text-xs font-medium text-muted-foreground">Juris Agent Lab</span><span className="mx-2 text-border">/</span><span className="text-xs font-semibold text-foreground">Advogada</span></div></div><Link to="/advogado/notificacoes" className="relative flex size-9 items-center justify-center rounded-md text-muted-foreground hover:bg-accent hover:text-foreground"><Bell className="size-4" /><span className="absolute right-1.5 top-1.5 size-1.5 rounded-full bg-critical" /></Link></header>
+          <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-border bg-background/90 px-4 backdrop-blur-xl sm:px-6 lg:px-8"><div className="flex items-center gap-3"><Button variant="ghost" size="icon" className="lg:hidden" onClick={() => setMobileOpen(true)} aria-label="Abrir menu"><Menu /></Button><div><span className="text-xs font-medium text-muted-foreground">InCasus</span><span className="mx-2 text-border">/</span><span className="text-xs font-semibold text-foreground">Advogada</span></div></div><Link to="/advogado/notificacoes" className="relative flex size-9 items-center justify-center rounded-md text-muted-foreground hover:bg-accent hover:text-foreground"><Bell className="size-4" /><span className="absolute right-1.5 top-1.5 size-1.5 rounded-full bg-critical" /></Link></header>
           <main className="mx-auto max-w-[1500px] px-4 py-7 sm:px-6 lg:px-8 lg:py-9">{children}</main>
         </div>
       </div>

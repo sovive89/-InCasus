@@ -93,5 +93,5 @@ function mockAnswer(request: AICompletionRequest): string {
   if (q.includes("minuta")) {
     return "Posso preparar um rascunho a partir dos dados do caso. O texto gerado é sempre um rascunho e exige revisão profissional antes de qualquer protocolo.";
   }
-  return "Registrei sua solicitação. Em modo demonstração, respondo com base apenas nos dados do laboratório; nenhuma fonte externa foi consultada.";
+  return "Registrei sua solicitação. Em modo demonstração, respondo com base apenas nos dados do escritório; nenhuma fonte externa foi consultada.";
 }

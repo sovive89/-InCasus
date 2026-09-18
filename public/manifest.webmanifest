@@ -1,7 +1,7 @@
 {
-  "name": "Juris Agent Lab",
-  "short_name": "Juris Agent",
-  "description": "Command Center jurídico com inteligência artificial assistida.",
+  "name": "InCasus",
+  "short_name": "InCasus",
+  "description": "Central de comando jurídica com inteligência artificial assistida.",
   "start_url": "/login",
   "id": "/",
   "scope": "/",

@@ -1,6 +1,6 @@
-# Pixel Perfect Replica
+# InCasus
 
-Implement exactly the screenshot and nothing else
+Command center jurídico com IA: portal do advogado (`/advogado`) e portal do cliente (`/cliente`).
 
 This project was built with [Lovable](https://lovable.dev).
 

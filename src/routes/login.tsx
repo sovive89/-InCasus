@@ -9,10 +9,10 @@ import { demoAccounts, homeForRole, requestPasswordReset, signIn } from "@/lib/a
 
 export const Route = createFileRoute("/login")({
   head: () => ({ meta: [
-    { title: "Acesso — Juris Agent Lab" },
-    { name: "description", content: "Acesse o Command Center jurídico ou o ambiente do cliente." },
-    { property: "og:title", content: "Acesso — Juris Agent Lab" },
-    { property: "og:description", content: "Acesse o Command Center jurídico ou o ambiente do cliente." },
+    { title: "Acesso — InCasus" },
+    { name: "description", content: "Acesse o Central de comando jurídica ou o ambiente do cliente." },
+    { property: "og:title", content: "Acesso — InCasus" },
+    { property: "og:description", content: "Acesse o Central de comando jurídica ou o ambiente do cliente." },
     { property: "og:type", content: "website" },
     { name: "twitter:card", content: "summary_large_image" },
   ] }),
@@ -53,7 +53,7 @@ function LoginPage() {
         <section className="hidden flex-col justify-between border-r border-border px-12 py-12 lg:flex">
           <BrandMark />
           <div className="max-w-xl pb-16">
-            <p className="eyebrow mb-5">AI Legal Command Center</p>
+            <p className="eyebrow mb-5">Central jurídica com IA</p>
             <h1 className="font-display text-5xl font-semibold leading-[1.1] text-foreground">Inteligência aplicada à prática jurídica.</h1>
             <p className="mt-6 max-w-lg text-base leading-7 text-muted-foreground">Clientes, processos e análises reunidos em um ambiente preciso, seguro e preparado para revisão profissional.</p>
           </div>

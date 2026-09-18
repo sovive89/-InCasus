@@ -26,7 +26,7 @@ export function DocumentAnalysisPanel() {
     setResult(null);
     try {
       setPhase("extracting");
-      const { extractDocumentText } = await import("@/lib/document-text.client");
+      const { extractDocumentText } = await import("@/lib/document-text");
       const text = await extractDocumentText(file);
       setPhase("analyzing");
       const response = await analyze({

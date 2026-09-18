@@ -9,8 +9,8 @@ export function BrandMark({ compact = false, className }: { compact?: boolean; c
       </div>
       {!compact && (
         <div>
-          <div className="font-display text-sm font-semibold text-foreground">Juris Agent</div>
-          <div className="text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">Laboratório jurídico</div>
+          <div className="font-display text-sm font-semibold text-foreground">InCasus</div>
+          <div className="text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">Central de comando jurídica</div>
         </div>
       )}
     </div>
