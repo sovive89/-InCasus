@@ -19,10 +19,13 @@ import { Route as AdvogadoCasosRouteImport } from './routes/advogado.casos'
 import { Route as AdvogadoClientesRouteImport } from './routes/advogado.clientes'
 import { Route as AdvogadoDashboardRouteImport } from './routes/advogado.dashboard'
 import { Route as AdvogadoDocumentosRouteImport } from './routes/advogado.documentos'
+import { Route as AdvogadoMinutasRouteImport } from './routes/advogado.minutas'
 import { Route as AdvogadoNotificacoesRouteImport } from './routes/advogado.notificacoes'
+import { Route as AdvogadoPesquisaRouteImport } from './routes/advogado.pesquisa'
 import { Route as AdvogadoProcessosRouteImport } from './routes/advogado.processos'
 import { Route as ClienteAssistenteRouteImport } from './routes/cliente.assistente'
 import { Route as AdvogadoClientesIdRouteImport } from './routes/advogado.clientes.$id'
+import { Route as AdvogadoMinutasIdRouteImport } from './routes/advogado.minutas.$id'
 import { Route as AdvogadoProcessosIdRouteImport } from './routes/advogado.processos.$id'
 
 const IndexRoute = IndexRouteImport.update({
@@ -75,9 +78,19 @@ const AdvogadoDocumentosRoute = AdvogadoDocumentosRouteImport.update({
   path: '/documentos',
   getParentRoute: () => AdvogadoRoute,
 } as any)
+const AdvogadoMinutasRoute = AdvogadoMinutasRouteImport.update({
+  id: '/minutas',
+  path: '/minutas',
+  getParentRoute: () => AdvogadoRoute,
+} as any)
 const AdvogadoNotificacoesRoute = AdvogadoNotificacoesRouteImport.update({
   id: '/notificacoes',
   path: '/notificacoes',
+  getParentRoute: () => AdvogadoRoute,
+} as any)
+const AdvogadoPesquisaRoute = AdvogadoPesquisaRouteImport.update({
+  id: '/pesquisa',
+  path: '/pesquisa',
   getParentRoute: () => AdvogadoRoute,
 } as any)
 const AdvogadoProcessosRoute = AdvogadoProcessosRouteImport.update({
@@ -94,6 +107,11 @@ const AdvogadoClientesIdRoute = AdvogadoClientesIdRouteImport.update({
   id: '/$id',
   path: '/$id',
   getParentRoute: () => AdvogadoClientesRoute,
+} as any)
+const AdvogadoMinutasIdRoute = AdvogadoMinutasIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => AdvogadoMinutasRoute,
 } as any)
 const AdvogadoProcessosIdRoute = AdvogadoProcessosIdRouteImport.update({
   id: '/$id',
@@ -112,10 +130,13 @@ export interface FileRoutesByFullPath {
   '/advogado/clientes': typeof AdvogadoClientesRouteWithChildren
   '/advogado/dashboard': typeof AdvogadoDashboardRoute
   '/advogado/documentos': typeof AdvogadoDocumentosRoute
+  '/advogado/minutas': typeof AdvogadoMinutasRouteWithChildren
   '/advogado/notificacoes': typeof AdvogadoNotificacoesRoute
+  '/advogado/pesquisa': typeof AdvogadoPesquisaRoute
   '/advogado/processos': typeof AdvogadoProcessosRouteWithChildren
   '/cliente/assistente': typeof ClienteAssistenteRoute
   '/advogado/clientes/$id': typeof AdvogadoClientesIdRoute
+  '/advogado/minutas/$id': typeof AdvogadoMinutasIdRoute
   '/advogado/processos/$id': typeof AdvogadoProcessosIdRoute
 }
 export interface FileRoutesByTo {
@@ -129,10 +150,13 @@ export interface FileRoutesByTo {
   '/advogado/clientes': typeof AdvogadoClientesRouteWithChildren
   '/advogado/dashboard': typeof AdvogadoDashboardRoute
   '/advogado/documentos': typeof AdvogadoDocumentosRoute
+  '/advogado/minutas': typeof AdvogadoMinutasRouteWithChildren
   '/advogado/notificacoes': typeof AdvogadoNotificacoesRoute
+  '/advogado/pesquisa': typeof AdvogadoPesquisaRoute
   '/advogado/processos': typeof AdvogadoProcessosRouteWithChildren
   '/cliente/assistente': typeof ClienteAssistenteRoute
   '/advogado/clientes/$id': typeof AdvogadoClientesIdRoute
+  '/advogado/minutas/$id': typeof AdvogadoMinutasIdRoute
   '/advogado/processos/$id': typeof AdvogadoProcessosIdRoute
 }
 export interface FileRoutesById {
@@ -147,10 +171,13 @@ export interface FileRoutesById {
   '/advogado/clientes': typeof AdvogadoClientesRouteWithChildren
   '/advogado/dashboard': typeof AdvogadoDashboardRoute
   '/advogado/documentos': typeof AdvogadoDocumentosRoute
+  '/advogado/minutas': typeof AdvogadoMinutasRouteWithChildren
   '/advogado/notificacoes': typeof AdvogadoNotificacoesRoute
+  '/advogado/pesquisa': typeof AdvogadoPesquisaRoute
   '/advogado/processos': typeof AdvogadoProcessosRouteWithChildren
   '/cliente/assistente': typeof ClienteAssistenteRoute
   '/advogado/clientes/$id': typeof AdvogadoClientesIdRoute
+  '/advogado/minutas/$id': typeof AdvogadoMinutasIdRoute
   '/advogado/processos/$id': typeof AdvogadoProcessosIdRoute
 }
 export interface FileRouteTypes {
@@ -166,10 +193,13 @@ export interface FileRouteTypes {
     | '/advogado/clientes'
     | '/advogado/dashboard'
     | '/advogado/documentos'
+    | '/advogado/minutas'
     | '/advogado/notificacoes'
+    | '/advogado/pesquisa'
     | '/advogado/processos'
     | '/cliente/assistente'
     | '/advogado/clientes/$id'
+    | '/advogado/minutas/$id'
     | '/advogado/processos/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -183,10 +213,13 @@ export interface FileRouteTypes {
     | '/advogado/clientes'
     | '/advogado/dashboard'
     | '/advogado/documentos'
+    | '/advogado/minutas'
     | '/advogado/notificacoes'
+    | '/advogado/pesquisa'
     | '/advogado/processos'
     | '/cliente/assistente'
     | '/advogado/clientes/$id'
+    | '/advogado/minutas/$id'
     | '/advogado/processos/$id'
   id:
     | '__root__'
@@ -200,10 +233,13 @@ export interface FileRouteTypes {
     | '/advogado/clientes'
     | '/advogado/dashboard'
     | '/advogado/documentos'
+    | '/advogado/minutas'
     | '/advogado/notificacoes'
+    | '/advogado/pesquisa'
     | '/advogado/processos'
     | '/cliente/assistente'
     | '/advogado/clientes/$id'
+    | '/advogado/minutas/$id'
     | '/advogado/processos/$id'
   fileRoutesById: FileRoutesById
 }
@@ -286,11 +322,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdvogadoDocumentosRouteImport
       parentRoute: typeof AdvogadoRoute
     }
+    '/advogado/minutas': {
+      id: '/advogado/minutas'
+      path: '/minutas'
+      fullPath: '/advogado/minutas'
+      preLoaderRoute: typeof AdvogadoMinutasRouteImport
+      parentRoute: typeof AdvogadoRoute
+    }
     '/advogado/notificacoes': {
       id: '/advogado/notificacoes'
       path: '/notificacoes'
       fullPath: '/advogado/notificacoes'
       preLoaderRoute: typeof AdvogadoNotificacoesRouteImport
+      parentRoute: typeof AdvogadoRoute
+    }
+    '/advogado/pesquisa': {
+      id: '/advogado/pesquisa'
+      path: '/pesquisa'
+      fullPath: '/advogado/pesquisa'
+      preLoaderRoute: typeof AdvogadoPesquisaRouteImport
       parentRoute: typeof AdvogadoRoute
     }
     '/advogado/processos': {
@@ -314,6 +364,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdvogadoClientesIdRouteImport
       parentRoute: typeof AdvogadoClientesRoute
     }
+    '/advogado/minutas/$id': {
+      id: '/advogado/minutas/$id'
+      path: '/$id'
+      fullPath: '/advogado/minutas/$id'
+      preLoaderRoute: typeof AdvogadoMinutasIdRouteImport
+      parentRoute: typeof AdvogadoMinutasRoute
+    }
     '/advogado/processos/$id': {
       id: '/advogado/processos/$id'
       path: '/$id'
@@ -335,6 +392,18 @@ const AdvogadoClientesRouteChildren: AdvogadoClientesRouteChildren = {
 const AdvogadoClientesRouteWithChildren =
   AdvogadoClientesRoute._addFileChildren(AdvogadoClientesRouteChildren)
 
+interface AdvogadoMinutasRouteChildren {
+  AdvogadoMinutasIdRoute: typeof AdvogadoMinutasIdRoute
+}
+
+const AdvogadoMinutasRouteChildren: AdvogadoMinutasRouteChildren = {
+  AdvogadoMinutasIdRoute: AdvogadoMinutasIdRoute,
+}
+
+const AdvogadoMinutasRouteWithChildren = AdvogadoMinutasRoute._addFileChildren(
+  AdvogadoMinutasRouteChildren,
+)
+
 interface AdvogadoProcessosRouteChildren {
   AdvogadoProcessosIdRoute: typeof AdvogadoProcessosIdRoute
 }
@@ -353,7 +422,9 @@ interface AdvogadoRouteChildren {
   AdvogadoClientesRoute: typeof AdvogadoClientesRouteWithChildren
   AdvogadoDashboardRoute: typeof AdvogadoDashboardRoute
   AdvogadoDocumentosRoute: typeof AdvogadoDocumentosRoute
+  AdvogadoMinutasRoute: typeof AdvogadoMinutasRouteWithChildren
   AdvogadoNotificacoesRoute: typeof AdvogadoNotificacoesRoute
+  AdvogadoPesquisaRoute: typeof AdvogadoPesquisaRoute
   AdvogadoProcessosRoute: typeof AdvogadoProcessosRouteWithChildren
 }
 
@@ -364,7 +435,9 @@ const AdvogadoRouteChildren: AdvogadoRouteChildren = {
   AdvogadoClientesRoute: AdvogadoClientesRouteWithChildren,
   AdvogadoDashboardRoute: AdvogadoDashboardRoute,
   AdvogadoDocumentosRoute: AdvogadoDocumentosRoute,
+  AdvogadoMinutasRoute: AdvogadoMinutasRouteWithChildren,
   AdvogadoNotificacoesRoute: AdvogadoNotificacoesRoute,
+  AdvogadoPesquisaRoute: AdvogadoPesquisaRoute,
   AdvogadoProcessosRoute: AdvogadoProcessosRouteWithChildren,
 }
 
