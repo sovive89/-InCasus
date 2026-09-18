@@ -10,11 +10,24 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdvogadoRouteImport } from './routes/advogado'
+import { Route as ClienteRouteImport } from './routes/cliente'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as AdvogadoDashboardRouteImport } from './routes/advogado.dashboard'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdvogadoRoute = AdvogadoRouteImport.update({
+  id: '/advogado',
+  path: '/advogado',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ClienteRoute = ClienteRouteImport.update({
+  id: '/cliente',
+  path: '/cliente',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -22,30 +35,52 @@ const LoginRoute = LoginRouteImport.update({
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdvogadoDashboardRoute = AdvogadoDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AdvogadoRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/advogado': typeof AdvogadoRouteWithChildren
+  '/cliente': typeof ClienteRoute
   '/login': typeof LoginRoute
+  '/advogado/dashboard': typeof AdvogadoDashboardRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/advogado': typeof AdvogadoRouteWithChildren
+  '/cliente': typeof ClienteRoute
   '/login': typeof LoginRoute
+  '/advogado/dashboard': typeof AdvogadoDashboardRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/advogado': typeof AdvogadoRouteWithChildren
+  '/cliente': typeof ClienteRoute
   '/login': typeof LoginRoute
+  '/advogado/dashboard': typeof AdvogadoDashboardRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login'
+  fullPaths: '/' | '/advogado' | '/cliente' | '/login' | '/advogado/dashboard'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login'
-  id: '__root__' | '/' | '/login'
+  to: '/' | '/advogado' | '/cliente' | '/login' | '/advogado/dashboard'
+  id:
+    | '__root__'
+    | '/'
+    | '/advogado'
+    | '/cliente'
+    | '/login'
+    | '/advogado/dashboard'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdvogadoRoute: typeof AdvogadoRouteWithChildren
+  ClienteRoute: typeof ClienteRoute
   LoginRoute: typeof LoginRoute
 }
 
@@ -58,6 +93,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/advogado': {
+      id: '/advogado'
+      path: '/advogado'
+      fullPath: '/advogado'
+      preLoaderRoute: typeof AdvogadoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cliente': {
+      id: '/cliente'
+      path: '/cliente'
+      fullPath: '/cliente'
+      preLoaderRoute: typeof ClienteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/login': {
       id: '/login'
       path: '/login'
@@ -65,11 +114,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/advogado/dashboard': {
+      id: '/advogado/dashboard'
+      path: '/dashboard'
+      fullPath: '/advogado/dashboard'
+      preLoaderRoute: typeof AdvogadoDashboardRouteImport
+      parentRoute: typeof AdvogadoRoute
+    }
   }
 }
 
+interface AdvogadoRouteChildren {
+  AdvogadoDashboardRoute: typeof AdvogadoDashboardRoute
+}
+
+const AdvogadoRouteChildren: AdvogadoRouteChildren = {
+  AdvogadoDashboardRoute: AdvogadoDashboardRoute,
+}
+
+const AdvogadoRouteWithChildren = AdvogadoRoute._addFileChildren(
+  AdvogadoRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdvogadoRoute: AdvogadoRouteWithChildren,
+  ClienteRoute: ClienteRoute,
   LoginRoute: LoginRoute,
 }
 export const routeTree = rootRouteImport
