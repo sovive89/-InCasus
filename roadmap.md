@@ -8,4 +8,4 @@
 - [x] Criar área completa do advogado e páginas de detalhe
 - [x] Criar área mobile-first do cliente e chat
 - [x] Configurar instalação PWA com manifesto e ícones
-- [ ] Validar fluxos em desktop e celular
+- [x] Validar fluxos em desktop e celular
