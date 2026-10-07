@@ -19,7 +19,7 @@ const nav = [
 
 export function ClientShell({ children }: { children: ReactNode }) {
   const location = useLocation(); const navigate = useNavigate(); const [open, setOpen] = useState(false);
-  function logout() { signOut(); navigate({ to: "/login" }); }
+  async function logout() { await signOut(); navigate({ to: "/login" }); }
   const isActive = (to: string) => to === "/cliente" ? location.pathname === to : location.pathname.startsWith(to);
   return <div className="min-h-screen bg-background pb-20 md:pb-0">
     <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-border bg-background/90 px-4 backdrop-blur-xl md:px-8"><BrandMark /><div className="flex items-center gap-1"><Link to="/cliente/notificacoes" className="relative flex size-9 items-center justify-center rounded-md text-muted-foreground hover:bg-accent"><Bell className="size-4" /><span className="absolute right-1.5 top-1.5 size-1.5 rounded-full bg-critical" /></Link><Button variant="ghost" size="icon" className="hidden md:inline-flex" onClick={logout}><LogOut /></Button><Button variant="ghost" size="icon" className="md:hidden" onClick={() => setOpen(true)}><Menu /></Button></div></header>

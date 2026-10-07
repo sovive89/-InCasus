@@ -5,7 +5,7 @@ import { BrandMark } from "./brand-mark";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
-import { getSession, signOut } from "@/lib/auth/session";
+import { signOut } from "@/lib/auth/session";
 
 const nav = [
   { to: "/advogado/dashboard", label: "Central de Comando", icon: LayoutDashboard },
@@ -20,7 +20,7 @@ const nav = [
   { to: "/advogado/notificacoes", label: "Notificações", icon: Bell },
 ] as const;
 
-export function LawyerShell({ children }: { children: ReactNode }) {
+export function LawyerShell({ children, userName }: { children: ReactNode; userName?: string }) {
   const location = useLocation();
   const navigate = useNavigate();
   const [collapsed, setCollapsed] = useState(false);
@@ -28,7 +28,7 @@ export function LawyerShell({ children }: { children: ReactNode }) {
 
   useEffect(() => { setMobileOpen(false); }, [location.pathname]);
 
-  function logout() { signOut(); navigate({ to: "/login" }); }
+  async function logout() { await signOut(); navigate({ to: "/login" }); }
 
   return (
     <TooltipProvider delayDuration={100}>
@@ -43,7 +43,7 @@ export function LawyerShell({ children }: { children: ReactNode }) {
             })}
           </nav>
           <div className="border-t border-sidebar-border p-3">
-            {!collapsed && <div className="mb-3 px-3"><p className="truncate text-xs font-semibold">Dra. Helena Duarte</p><p className="mt-0.5 text-[10px] text-muted-foreground">Direito de Família</p></div>}
+            {!collapsed && <div className="mb-3 px-3"><p className="truncate text-xs font-semibold">{userName ?? "Advogado(a)"}</p><p className="mt-0.5 text-[10px] text-muted-foreground">Advocacia</p></div>}
             <div className={cn("flex gap-1", collapsed && "flex-col")}><Button variant="ghost" size="icon" onClick={() => setCollapsed((v) => !v)} aria-label={collapsed ? "Expandir menu" : "Recolher menu"}>{collapsed ? <ChevronRight /> : <ChevronLeft />}</Button><Button variant="ghost" size="icon" onClick={logout} aria-label="Sair"><LogOut /></Button></div>
           </div>
         </aside>

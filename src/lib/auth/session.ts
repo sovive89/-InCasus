@@ -1,54 +1,97 @@
 /**
- * Sessão de demonstração.
+ * Autenticação real com Supabase Auth.
  *
- * Mantém a mesma interface prevista para o Supabase Auth (signIn / signOut /
- * getSession), permitindo trocar a implementação sem alterar as telas.
+ * Conceito: o Supabase guarda quem está logado (o "token") no navegador e o
+ * envia em cada consulta. O banco usa esse token para decidir, via RLS, o que
+ * cada pessoa pode ver — por isso a segurança de verdade mora no banco; as
+ * telas só usam esta camada para redirecionar e mostrar o nome do usuário.
  */
-import { profiles } from "../mock/data";
+import { useEffect, useState } from "react";
+import { useNavigate } from "@tanstack/react-router";
+import { supabase } from "@/integrations/supabase/client";
 import type { Profile, Role } from "../domain/types";
-
-const STORAGE_KEY = "agente-juridico.session";
 
 export type Session = { profile: Profile };
 
-const DEMO_PASSWORD = "demo1234";
+async function loadProfile(userId: string): Promise<Profile | null> {
+  const { data, error } = await supabase
+    .from("profiles")
+    .select("id, name, email, role, phone, created_at")
+    .eq("id", userId)
+    .maybeSingle();
+  if (error || !data) return null;
+  return {
+    id: data.id,
+    name: data.name,
+    email: data.email,
+    role: data.role,
+    createdAt: data.created_at,
+    ...(data.phone ? { phone: data.phone } : {}),
+  };
+}
 
-export const demoAccounts = [
-  { email: "helena@duarteadvocacia.com.br", role: "lawyer" as Role, label: "Advogada" },
-  { email: "maria.antunes@email.com", role: "client" as Role, label: "Cliente" },
-];
-
-export function getSession(): Session | null {
-  if (typeof window === "undefined") return null;
-  const raw = window.localStorage.getItem(STORAGE_KEY);
-  if (!raw) return null;
-  try {
-    return JSON.parse(raw) as Session;
-  } catch {
-    return null;
-  }
+export async function getSession(): Promise<Session | null> {
+  const { data } = await supabase.auth.getSession();
+  const user = data.session?.user;
+  if (!user) return null;
+  const profile = await loadProfile(user.id);
+  return profile ? { profile } : null;
 }
 
 export async function signIn(email: string, password: string): Promise<Session> {
-  await new Promise((r) => setTimeout(r, 650));
-  const profile = profiles.find((p) => p.email.toLowerCase() === email.trim().toLowerCase());
-  if (!profile || password !== DEMO_PASSWORD) {
-    throw new Error("E-mail ou senha inválidos.");
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email: email.trim(),
+    password,
+  });
+  if (error || !data.user) throw new Error("E-mail ou senha inválidos.");
+  const profile = await loadProfile(data.user.id);
+  if (!profile) {
+    await supabase.auth.signOut();
+    throw new Error("Perfil não encontrado. Fale com o escritório.");
   }
-  const session: Session = { profile };
-  window.localStorage.setItem(STORAGE_KEY, JSON.stringify(session));
-  return session;
+  return { profile };
 }
 
 export async function requestPasswordReset(email: string): Promise<void> {
-  await new Promise((r) => setTimeout(r, 650));
   if (!email.includes("@")) throw new Error("Informe um e-mail válido.");
+  const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
+    redirectTo: `${window.location.origin}/login`,
+  });
+  if (error) throw new Error("Não foi possível enviar as instruções agora.");
 }
 
-export function signOut() {
-  window.localStorage.removeItem(STORAGE_KEY);
+export async function signOut(): Promise<void> {
+  await supabase.auth.signOut();
 }
 
 export function homeForRole(role: Role) {
   return role === "lawyer" ? "/advogado/dashboard" : "/cliente";
+}
+
+/**
+ * Guarda de rota (UX): redireciona quem não está logado — ou está na área
+ * errada — e devolve o perfil quando tudo estiver certo.
+ */
+export function useRequireRole(role: Role): Profile | null {
+  const navigate = useNavigate();
+  const [profile, setProfile] = useState<Profile | null>(null);
+
+  useEffect(() => {
+    let active = true;
+    getSession().then((session) => {
+      if (!active) return;
+      if (!session) {
+        navigate({ to: "/login" });
+      } else if (session.profile.role !== role) {
+        navigate({ to: homeForRole(session.profile.role) });
+      } else {
+        setProfile(session.profile);
+      }
+    });
+    return () => {
+      active = false;
+    };
+  }, [navigate, role]);
+
+  return profile;
 }
