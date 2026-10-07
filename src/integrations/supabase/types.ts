@@ -420,6 +420,432 @@ export type Database = {
           },
         ]
       }
+      lawyer_profiles: {
+        Row: {
+          created_at: string
+          id: string
+          oab_number: string
+          oab_state: string
+          user_id: string
+          verified: boolean
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          oab_number: string
+          oab_state: string
+          user_id: string
+          verified?: boolean
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          oab_number?: string
+          oab_state?: string
+          user_id?: string
+          verified?: boolean
+        }
+        Relationships: []
+      }
+      legal_data_sources: {
+        Row: {
+          entity_id: string
+          entity_type: string
+          external_id: string | null
+          id: string
+          provider: string
+          raw_hash: string | null
+          retrieved_at: string
+        }
+        Insert: {
+          entity_id: string
+          entity_type: string
+          external_id?: string | null
+          id?: string
+          provider: string
+          raw_hash?: string | null
+          retrieved_at?: string
+        }
+        Update: {
+          entity_id?: string
+          entity_type?: string
+          external_id?: string | null
+          id?: string
+          provider?: string
+          raw_hash?: string | null
+          retrieved_at?: string
+        }
+        Relationships: []
+      }
+      legal_documents: {
+        Row: {
+          available_until: string | null
+          created_at: string
+          document_type: string | null
+          external_url: string | null
+          id: string
+          movement_id: string | null
+          name: string
+          process_id: string
+          provider: string
+          storage_path: string | null
+        }
+        Insert: {
+          available_until?: string | null
+          created_at?: string
+          document_type?: string | null
+          external_url?: string | null
+          id?: string
+          movement_id?: string | null
+          name: string
+          process_id: string
+          provider: string
+          storage_path?: string | null
+        }
+        Update: {
+          available_until?: string | null
+          created_at?: string
+          document_type?: string | null
+          external_url?: string | null
+          id?: string
+          movement_id?: string | null
+          name?: string
+          process_id?: string
+          provider?: string
+          storage_path?: string | null
+        }
+        Relationships: []
+      }
+      legal_integration_settings: {
+        Row: {
+          id: boolean
+          mode: string
+          updated_at: string
+        }
+        Insert: {
+          id?: boolean
+          mode?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: boolean
+          mode?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      legal_lawyers: {
+        Row: {
+          id: string
+          name: string
+          oab_number: string
+          oab_state: string
+        }
+        Insert: {
+          id?: string
+          name: string
+          oab_number: string
+          oab_state: string
+        }
+        Update: {
+          id?: string
+          name?: string
+          oab_number?: string
+          oab_state?: string
+        }
+        Relationships: []
+      }
+      legal_movements: {
+        Row: {
+          ai_generated_at: string | null
+          ai_summary: string | null
+          approved_at: string | null
+          approved_by: string | null
+          created_at: string
+          dedup_key: string
+          description: string
+          external_id: string | null
+          id: string
+          lawyer_approved: boolean
+          movement_code: string | null
+          movement_date: string
+          process_id: string
+          provider: string
+          provider_payload_hash: string | null
+          title: string
+        }
+        Insert: {
+          ai_generated_at?: string | null
+          ai_summary?: string | null
+          approved_at?: string | null
+          approved_by?: string | null
+          created_at?: string
+          dedup_key: string
+          description?: string
+          external_id?: string | null
+          id?: string
+          lawyer_approved?: boolean
+          movement_code?: string | null
+          movement_date: string
+          process_id: string
+          provider: string
+          provider_payload_hash?: string | null
+          title: string
+        }
+        Update: {
+          ai_generated_at?: string | null
+          ai_summary?: string | null
+          approved_at?: string | null
+          approved_by?: string | null
+          created_at?: string
+          dedup_key?: string
+          description?: string
+          external_id?: string | null
+          id?: string
+          lawyer_approved?: boolean
+          movement_code?: string | null
+          movement_date?: string
+          process_id?: string
+          provider?: string
+          provider_payload_hash?: string | null
+          title?: string
+        }
+        Relationships: []
+      }
+      legal_parties: {
+        Row: {
+          document: string | null
+          id: string
+          name: string
+          process_id: string
+          role: string | null
+          type: string | null
+        }
+        Insert: {
+          document?: string | null
+          id?: string
+          name: string
+          process_id: string
+          role?: string | null
+          type?: string | null
+        }
+        Update: {
+          document?: string | null
+          id?: string
+          name?: string
+          process_id?: string
+          role?: string | null
+          type?: string | null
+        }
+        Relationships: []
+      }
+      legal_process_access: {
+        Row: {
+          created_at: string
+          process_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          process_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          process_id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      legal_process_lawyers: {
+        Row: {
+          lawyer_id: string
+          party_id: string | null
+          process_id: string
+        }
+        Insert: {
+          lawyer_id: string
+          party_id?: string | null
+          process_id: string
+        }
+        Update: {
+          lawyer_id?: string
+          party_id?: string | null
+          process_id?: string
+        }
+        Relationships: []
+      }
+      legal_processes: {
+        Row: {
+          class_code: number | null
+          class_name: string
+          cnj_number: string
+          court: string
+          created_at: string
+          degree: string | null
+          distribution_date: string | null
+          id: string
+          judge: string | null
+          jurisdiction: string | null
+          last_movement_at: string | null
+          last_sync_at: string | null
+          secrecy_level: number
+          status: string | null
+          subject: string
+          tribunal: string
+          updated_at: string
+        }
+        Insert: {
+          class_code?: number | null
+          class_name?: string
+          cnj_number: string
+          court?: string
+          created_at?: string
+          degree?: string | null
+          distribution_date?: string | null
+          id?: string
+          judge?: string | null
+          jurisdiction?: string | null
+          last_movement_at?: string | null
+          last_sync_at?: string | null
+          secrecy_level?: number
+          status?: string | null
+          subject?: string
+          tribunal?: string
+          updated_at?: string
+        }
+        Update: {
+          class_code?: number | null
+          class_name?: string
+          cnj_number?: string
+          court?: string
+          created_at?: string
+          degree?: string | null
+          distribution_date?: string | null
+          id?: string
+          judge?: string | null
+          jurisdiction?: string | null
+          last_movement_at?: string | null
+          last_sync_at?: string | null
+          secrecy_level?: number
+          status?: string | null
+          subject?: string
+          tribunal?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      legal_provider_settings: {
+        Row: {
+          enabled: boolean
+          environment: string
+          last_error: string | null
+          last_sync_at: string | null
+          priority: number
+          provider: string
+          updated_at: string
+        }
+        Insert: {
+          enabled?: boolean
+          environment?: string
+          last_error?: string | null
+          last_sync_at?: string | null
+          priority?: number
+          provider: string
+          updated_at?: string
+        }
+        Update: {
+          enabled?: boolean
+          environment?: string
+          last_error?: string | null
+          last_sync_at?: string | null
+          priority?: number
+          provider?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      process_subscriptions: {
+        Row: {
+          active: boolean
+          created_at: string
+          external_subscription_id: string | null
+          id: string
+          last_checked_at: string | null
+          lawyer_id: string
+          next_check_at: string | null
+          process_id: string
+          provider: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          external_subscription_id?: string | null
+          id?: string
+          last_checked_at?: string | null
+          lawyer_id: string
+          next_check_at?: string | null
+          process_id: string
+          provider: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          external_subscription_id?: string | null
+          id?: string
+          last_checked_at?: string | null
+          lawyer_id?: string
+          next_check_at?: string | null
+          process_id?: string
+          provider?: string
+        }
+        Relationships: []
+      }
+      provider_requests: {
+        Row: {
+          cached: boolean
+          created_at: string
+          duration_ms: number | null
+          error_code: string | null
+          estimated_cost: number
+          id: string
+          operation: string
+          process_id: string | null
+          provider: string
+          requested_by: string | null
+          status_code: number | null
+          success: boolean
+        }
+        Insert: {
+          cached?: boolean
+          created_at?: string
+          duration_ms?: number | null
+          error_code?: string | null
+          estimated_cost?: number
+          id?: string
+          operation: string
+          process_id?: string | null
+          provider: string
+          requested_by?: string | null
+          status_code?: number | null
+          success: boolean
+        }
+        Update: {
+          cached?: boolean
+          created_at?: string
+          duration_ms?: number | null
+          error_code?: string | null
+          estimated_cost?: number
+          id?: string
+          operation?: string
+          process_id?: string | null
+          provider?: string
+          requested_by?: string | null
+          status_code?: number | null
+          success?: boolean
+        }
+        Relationships: []
+      }
       messages: {
         Row: {
           author: Database["public"]["Enums"]["chat_author"]
