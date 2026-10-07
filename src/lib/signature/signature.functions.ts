@@ -24,34 +24,9 @@ export type SignatureActionResult = { ok: true; message: string } | { ok: false;
 
 type Ctx = { supabase: import("@supabase/supabase-js").SupabaseClient; userId: string };
 
-/** Escritório do usuário. Advogado sem escritório ganha o seu (primeiro acesso) e vira admin. */
-async function resolveOffice(ctx: Ctx): Promise<{ officeId: string; isAdmin: boolean } | null> {
-  const { data: profile } = await ctx.supabase
-    .from("profiles")
-    .select("role, name")
-    .eq("id", ctx.userId)
-    .maybeSingle();
-  if (profile?.role !== "lawyer") return null;
-  const { data: member } = await ctx.supabase
-    .from("office_members")
-    .select("office_id, role")
-    .eq("user_id", ctx.userId)
-    .limit(1)
-    .maybeSingle();
-  if (member) return { officeId: member.office_id as string, isAdmin: member.role === "admin" };
-
-  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-  const admin = supabaseAdmin as unknown as import("@supabase/supabase-js").SupabaseClient;
-  const { data: office, error } = await admin
-    .from("offices")
-    .insert({ name: profile.name ? `Escritório ${profile.name}` : "Meu escritório" })
-    .select("id")
-    .single();
-  if (error || !office) return null;
-  await admin
-    .from("office_members")
-    .insert({ office_id: office.id, user_id: ctx.userId, role: "admin" });
-  return { officeId: office.id as string, isAdmin: true };
+async function resolveOffice(ctx: Ctx) {
+  const { resolveOffice: resolve } = await import("@/lib/office/office.server");
+  return resolve(ctx);
 }
 
 export const getSignatureOverview = createServerFn({ method: "GET" })

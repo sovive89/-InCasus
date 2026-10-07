@@ -21,6 +21,7 @@ import { Route as AdvogadoConfiguracoesRouteImport } from './routes/advogado.con
 import { Route as AdvogadoDashboardRouteImport } from './routes/advogado.dashboard'
 import { Route as AdvogadoDocumentosRouteImport } from './routes/advogado.documentos'
 import { Route as AdvogadoMinutasRouteImport } from './routes/advogado.minutas'
+import { Route as AdvogadoModelosRouteImport } from './routes/advogado.modelos'
 import { Route as AdvogadoNotificacoesRouteImport } from './routes/advogado.notificacoes'
 import { Route as AdvogadoPesquisaRouteImport } from './routes/advogado.pesquisa'
 import { Route as AdvogadoProcessosRouteImport } from './routes/advogado.processos'
@@ -95,6 +96,11 @@ const AdvogadoDocumentosRoute = AdvogadoDocumentosRouteImport.update({
 const AdvogadoMinutasRoute = AdvogadoMinutasRouteImport.update({
   id: '/minutas',
   path: '/minutas',
+  getParentRoute: () => AdvogadoRoute,
+} as any)
+const AdvogadoModelosRoute = AdvogadoModelosRouteImport.update({
+  id: '/modelos',
+  path: '/modelos',
   getParentRoute: () => AdvogadoRoute,
 } as any)
 const AdvogadoNotificacoesRoute = AdvogadoNotificacoesRouteImport.update({
@@ -187,6 +193,7 @@ export interface FileRoutesByFullPath {
   '/advogado/dashboard': typeof AdvogadoDashboardRoute
   '/advogado/documentos': typeof AdvogadoDocumentosRoute
   '/advogado/minutas': typeof AdvogadoMinutasRouteWithChildren
+  '/advogado/modelos': typeof AdvogadoModelosRoute
   '/advogado/notificacoes': typeof AdvogadoNotificacoesRoute
   '/advogado/pesquisa': typeof AdvogadoPesquisaRoute
   '/advogado/processos': typeof AdvogadoProcessosRouteWithChildren
@@ -215,6 +222,7 @@ export interface FileRoutesByTo {
   '/advogado/dashboard': typeof AdvogadoDashboardRoute
   '/advogado/documentos': typeof AdvogadoDocumentosRoute
   '/advogado/minutas': typeof AdvogadoMinutasRouteWithChildren
+  '/advogado/modelos': typeof AdvogadoModelosRoute
   '/advogado/notificacoes': typeof AdvogadoNotificacoesRoute
   '/advogado/pesquisa': typeof AdvogadoPesquisaRoute
   '/advogado/processos': typeof AdvogadoProcessosRouteWithChildren
@@ -245,6 +253,7 @@ export interface FileRoutesById {
   '/advogado/dashboard': typeof AdvogadoDashboardRoute
   '/advogado/documentos': typeof AdvogadoDocumentosRoute
   '/advogado/minutas': typeof AdvogadoMinutasRouteWithChildren
+  '/advogado/modelos': typeof AdvogadoModelosRoute
   '/advogado/notificacoes': typeof AdvogadoNotificacoesRoute
   '/advogado/pesquisa': typeof AdvogadoPesquisaRoute
   '/advogado/processos': typeof AdvogadoProcessosRouteWithChildren
@@ -276,6 +285,7 @@ export interface FileRouteTypes {
     | '/advogado/dashboard'
     | '/advogado/documentos'
     | '/advogado/minutas'
+    | '/advogado/modelos'
     | '/advogado/notificacoes'
     | '/advogado/pesquisa'
     | '/advogado/processos'
@@ -304,6 +314,7 @@ export interface FileRouteTypes {
     | '/advogado/dashboard'
     | '/advogado/documentos'
     | '/advogado/minutas'
+    | '/advogado/modelos'
     | '/advogado/notificacoes'
     | '/advogado/pesquisa'
     | '/advogado/processos'
@@ -333,6 +344,7 @@ export interface FileRouteTypes {
     | '/advogado/dashboard'
     | '/advogado/documentos'
     | '/advogado/minutas'
+    | '/advogado/modelos'
     | '/advogado/notificacoes'
     | '/advogado/pesquisa'
     | '/advogado/processos'
@@ -442,6 +454,13 @@ declare module '@tanstack/react-router' {
       path: '/minutas'
       fullPath: '/advogado/minutas'
       preLoaderRoute: typeof AdvogadoMinutasRouteImport
+      parentRoute: typeof AdvogadoRoute
+    }
+    '/advogado/modelos': {
+      id: '/advogado/modelos'
+      path: '/modelos'
+      fullPath: '/advogado/modelos'
+      preLoaderRoute: typeof AdvogadoModelosRouteImport
       parentRoute: typeof AdvogadoRoute
     }
     '/advogado/notificacoes': {
@@ -595,6 +614,7 @@ interface AdvogadoRouteChildren {
   AdvogadoDashboardRoute: typeof AdvogadoDashboardRoute
   AdvogadoDocumentosRoute: typeof AdvogadoDocumentosRoute
   AdvogadoMinutasRoute: typeof AdvogadoMinutasRouteWithChildren
+  AdvogadoModelosRoute: typeof AdvogadoModelosRoute
   AdvogadoNotificacoesRoute: typeof AdvogadoNotificacoesRoute
   AdvogadoPesquisaRoute: typeof AdvogadoPesquisaRoute
   AdvogadoProcessosRoute: typeof AdvogadoProcessosRouteWithChildren
@@ -609,6 +629,7 @@ const AdvogadoRouteChildren: AdvogadoRouteChildren = {
   AdvogadoDashboardRoute: AdvogadoDashboardRoute,
   AdvogadoDocumentosRoute: AdvogadoDocumentosRoute,
   AdvogadoMinutasRoute: AdvogadoMinutasRouteWithChildren,
+  AdvogadoModelosRoute: AdvogadoModelosRoute,
   AdvogadoNotificacoesRoute: AdvogadoNotificacoesRoute,
   AdvogadoPesquisaRoute: AdvogadoPesquisaRoute,
   AdvogadoProcessosRoute: AdvogadoProcessosRouteWithChildren,
