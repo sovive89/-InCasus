@@ -1,6 +1,6 @@
 import { Link, useLocation, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState, type ReactNode } from "react";
-import { Bell, Bot, BriefcaseBusiness, CalendarDays, ChevronLeft, ChevronRight, FilePenLine, FileSearch, Files, LayoutDashboard, LogOut, Menu, Search, Users, X } from "lucide-react";
+import { Bell, Bot, BriefcaseBusiness, CalendarDays, ChevronLeft, ChevronRight, FilePenLine, FileSearch, Files, LayoutDashboard, LogOut, Menu, Search, Settings, Users, X } from "lucide-react";
 import { BrandMark } from "./brand-mark";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
@@ -18,6 +18,7 @@ const nav = [
   { to: "/advogado/pesquisa", label: "Pesquisa", icon: Search },
   { to: "/advogado/minutas", label: "Minutas", icon: FilePenLine },
   { to: "/advogado/notificacoes", label: "Notificações", icon: Bell },
+  { to: "/advogado/configuracoes", label: "Configurações", icon: Settings },
 ] as const;
 
 export function LawyerShell({ children, userName }: { children: ReactNode; userName?: string }) {

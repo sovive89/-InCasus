@@ -17,6 +17,7 @@ import { Route as AdvogadoAgendaRouteImport } from './routes/advogado.agenda'
 import { Route as AdvogadoAssistenteRouteImport } from './routes/advogado.assistente'
 import { Route as AdvogadoCasosRouteImport } from './routes/advogado.casos'
 import { Route as AdvogadoClientesRouteImport } from './routes/advogado.clientes'
+import { Route as AdvogadoConfiguracoesRouteImport } from './routes/advogado.configuracoes'
 import { Route as AdvogadoDashboardRouteImport } from './routes/advogado.dashboard'
 import { Route as AdvogadoDocumentosRouteImport } from './routes/advogado.documentos'
 import { Route as AdvogadoMinutasRouteImport } from './routes/advogado.minutas'
@@ -34,6 +35,7 @@ import { Route as ClienteProcessosRouteImport } from './routes/cliente.processos
 import { Route as AdvogadoClientesIdRouteImport } from './routes/advogado.clientes.$id'
 import { Route as AdvogadoMinutasIdRouteImport } from './routes/advogado.minutas.$id'
 import { Route as AdvogadoProcessosIdRouteImport } from './routes/advogado.processos.$id'
+import { Route as ApiPublicSignatureWebhookProviderOfficeIdRouteImport } from './routes/api.public.signature-webhook.$provider.$officeId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -73,6 +75,11 @@ const AdvogadoCasosRoute = AdvogadoCasosRouteImport.update({
 const AdvogadoClientesRoute = AdvogadoClientesRouteImport.update({
   id: '/clientes',
   path: '/clientes',
+  getParentRoute: () => AdvogadoRoute,
+} as any)
+const AdvogadoConfiguracoesRoute = AdvogadoConfiguracoesRouteImport.update({
+  id: '/configuracoes',
+  path: '/configuracoes',
   getParentRoute: () => AdvogadoRoute,
 } as any)
 const AdvogadoDashboardRoute = AdvogadoDashboardRouteImport.update({
@@ -160,6 +167,12 @@ const AdvogadoProcessosIdRoute = AdvogadoProcessosIdRouteImport.update({
   path: '/$id',
   getParentRoute: () => AdvogadoProcessosRoute,
 } as any)
+const ApiPublicSignatureWebhookProviderOfficeIdRoute =
+  ApiPublicSignatureWebhookProviderOfficeIdRouteImport.update({
+    id: '/api/public/signature-webhook/$provider/$officeId',
+    path: '/api/public/signature-webhook/$provider/$officeId',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -170,6 +183,7 @@ export interface FileRoutesByFullPath {
   '/advogado/assistente': typeof AdvogadoAssistenteRoute
   '/advogado/casos': typeof AdvogadoCasosRoute
   '/advogado/clientes': typeof AdvogadoClientesRouteWithChildren
+  '/advogado/configuracoes': typeof AdvogadoConfiguracoesRoute
   '/advogado/dashboard': typeof AdvogadoDashboardRoute
   '/advogado/documentos': typeof AdvogadoDocumentosRoute
   '/advogado/minutas': typeof AdvogadoMinutasRouteWithChildren
@@ -187,6 +201,7 @@ export interface FileRoutesByFullPath {
   '/advogado/clientes/$id': typeof AdvogadoClientesIdRoute
   '/advogado/minutas/$id': typeof AdvogadoMinutasIdRoute
   '/advogado/processos/$id': typeof AdvogadoProcessosIdRoute
+  '/api/public/signature-webhook/$provider/$officeId': typeof ApiPublicSignatureWebhookProviderOfficeIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -196,6 +211,7 @@ export interface FileRoutesByTo {
   '/advogado/assistente': typeof AdvogadoAssistenteRoute
   '/advogado/casos': typeof AdvogadoCasosRoute
   '/advogado/clientes': typeof AdvogadoClientesRouteWithChildren
+  '/advogado/configuracoes': typeof AdvogadoConfiguracoesRoute
   '/advogado/dashboard': typeof AdvogadoDashboardRoute
   '/advogado/documentos': typeof AdvogadoDocumentosRoute
   '/advogado/minutas': typeof AdvogadoMinutasRouteWithChildren
@@ -213,6 +229,7 @@ export interface FileRoutesByTo {
   '/advogado/clientes/$id': typeof AdvogadoClientesIdRoute
   '/advogado/minutas/$id': typeof AdvogadoMinutasIdRoute
   '/advogado/processos/$id': typeof AdvogadoProcessosIdRoute
+  '/api/public/signature-webhook/$provider/$officeId': typeof ApiPublicSignatureWebhookProviderOfficeIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -224,6 +241,7 @@ export interface FileRoutesById {
   '/advogado/assistente': typeof AdvogadoAssistenteRoute
   '/advogado/casos': typeof AdvogadoCasosRoute
   '/advogado/clientes': typeof AdvogadoClientesRouteWithChildren
+  '/advogado/configuracoes': typeof AdvogadoConfiguracoesRoute
   '/advogado/dashboard': typeof AdvogadoDashboardRoute
   '/advogado/documentos': typeof AdvogadoDocumentosRoute
   '/advogado/minutas': typeof AdvogadoMinutasRouteWithChildren
@@ -241,6 +259,7 @@ export interface FileRoutesById {
   '/advogado/clientes/$id': typeof AdvogadoClientesIdRoute
   '/advogado/minutas/$id': typeof AdvogadoMinutasIdRoute
   '/advogado/processos/$id': typeof AdvogadoProcessosIdRoute
+  '/api/public/signature-webhook/$provider/$officeId': typeof ApiPublicSignatureWebhookProviderOfficeIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -253,6 +272,7 @@ export interface FileRouteTypes {
     | '/advogado/assistente'
     | '/advogado/casos'
     | '/advogado/clientes'
+    | '/advogado/configuracoes'
     | '/advogado/dashboard'
     | '/advogado/documentos'
     | '/advogado/minutas'
@@ -270,6 +290,7 @@ export interface FileRouteTypes {
     | '/advogado/clientes/$id'
     | '/advogado/minutas/$id'
     | '/advogado/processos/$id'
+    | '/api/public/signature-webhook/$provider/$officeId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -279,6 +300,7 @@ export interface FileRouteTypes {
     | '/advogado/assistente'
     | '/advogado/casos'
     | '/advogado/clientes'
+    | '/advogado/configuracoes'
     | '/advogado/dashboard'
     | '/advogado/documentos'
     | '/advogado/minutas'
@@ -296,6 +318,7 @@ export interface FileRouteTypes {
     | '/advogado/clientes/$id'
     | '/advogado/minutas/$id'
     | '/advogado/processos/$id'
+    | '/api/public/signature-webhook/$provider/$officeId'
   id:
     | '__root__'
     | '/'
@@ -306,6 +329,7 @@ export interface FileRouteTypes {
     | '/advogado/assistente'
     | '/advogado/casos'
     | '/advogado/clientes'
+    | '/advogado/configuracoes'
     | '/advogado/dashboard'
     | '/advogado/documentos'
     | '/advogado/minutas'
@@ -323,6 +347,7 @@ export interface FileRouteTypes {
     | '/advogado/clientes/$id'
     | '/advogado/minutas/$id'
     | '/advogado/processos/$id'
+    | '/api/public/signature-webhook/$provider/$officeId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -330,6 +355,7 @@ export interface RootRouteChildren {
   AdvogadoRoute: typeof AdvogadoRouteWithChildren
   ClienteRoute: typeof ClienteRouteWithChildren
   LoginRoute: typeof LoginRoute
+  ApiPublicSignatureWebhookProviderOfficeIdRoute: typeof ApiPublicSignatureWebhookProviderOfficeIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -388,6 +414,13 @@ declare module '@tanstack/react-router' {
       path: '/clientes'
       fullPath: '/advogado/clientes'
       preLoaderRoute: typeof AdvogadoClientesRouteImport
+      parentRoute: typeof AdvogadoRoute
+    }
+    '/advogado/configuracoes': {
+      id: '/advogado/configuracoes'
+      path: '/configuracoes'
+      fullPath: '/advogado/configuracoes'
+      preLoaderRoute: typeof AdvogadoConfiguracoesRouteImport
       parentRoute: typeof AdvogadoRoute
     }
     '/advogado/dashboard': {
@@ -509,6 +542,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdvogadoProcessosIdRouteImport
       parentRoute: typeof AdvogadoProcessosRoute
     }
+    '/api/public/signature-webhook/$provider/$officeId': {
+      id: '/api/public/signature-webhook/$provider/$officeId'
+      path: '/api/public/signature-webhook/$provider/$officeId'
+      fullPath: '/api/public/signature-webhook/$provider/$officeId'
+      preLoaderRoute: typeof ApiPublicSignatureWebhookProviderOfficeIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -551,6 +591,7 @@ interface AdvogadoRouteChildren {
   AdvogadoAssistenteRoute: typeof AdvogadoAssistenteRoute
   AdvogadoCasosRoute: typeof AdvogadoCasosRoute
   AdvogadoClientesRoute: typeof AdvogadoClientesRouteWithChildren
+  AdvogadoConfiguracoesRoute: typeof AdvogadoConfiguracoesRoute
   AdvogadoDashboardRoute: typeof AdvogadoDashboardRoute
   AdvogadoDocumentosRoute: typeof AdvogadoDocumentosRoute
   AdvogadoMinutasRoute: typeof AdvogadoMinutasRouteWithChildren
@@ -564,6 +605,7 @@ const AdvogadoRouteChildren: AdvogadoRouteChildren = {
   AdvogadoAssistenteRoute: AdvogadoAssistenteRoute,
   AdvogadoCasosRoute: AdvogadoCasosRoute,
   AdvogadoClientesRoute: AdvogadoClientesRouteWithChildren,
+  AdvogadoConfiguracoesRoute: AdvogadoConfiguracoesRoute,
   AdvogadoDashboardRoute: AdvogadoDashboardRoute,
   AdvogadoDocumentosRoute: AdvogadoDocumentosRoute,
   AdvogadoMinutasRoute: AdvogadoMinutasRouteWithChildren,
@@ -606,6 +648,8 @@ const rootRouteChildren: RootRouteChildren = {
   AdvogadoRoute: AdvogadoRouteWithChildren,
   ClienteRoute: ClienteRouteWithChildren,
   LoginRoute: LoginRoute,
+  ApiPublicSignatureWebhookProviderOfficeIdRoute:
+    ApiPublicSignatureWebhookProviderOfficeIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -9,7 +9,7 @@
     "build:dev": "vite build --mode development",
     "preview": "vite preview",
     "lint": "eslint .",
-    "test": "bun test src/lib/legal",
+    "test": "bun test src/lib/legal src/lib/signature",
     "format": "prettier --write ."
   },
   "overrides": {
