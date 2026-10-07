@@ -1,11 +1,11 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { ArrowRight, Eye, EyeOff, KeyRound, Loader2, ShieldCheck } from "lucide-react";
 import { BrandMark } from "@/components/app/brand-mark";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { homeForRole, requestPasswordReset, signIn } from "@/lib/auth/session";
+import { getSession, homeForRole, requestPasswordReset, signIn, signInWithEmailLink, signUp } from "@/lib/auth/session";
 
 export const Route = createFileRoute("/login")({
   head: () => ({ meta: [
@@ -27,11 +27,34 @@ function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [resetSent, setResetSent] = useState(false);
+  const [mode, setMode] = useState<"password" | "link" | "signup">("password");
+  const [name, setName] = useState("");
+  const [notice, setNotice] = useState("");
+
+  // Já logado (ou voltando do link do e-mail): vai direto para o ambiente certo.
+  useEffect(() => {
+    let active = true;
+    getSession().then((session) => {
+      if (active && session) navigate({ to: homeForRole(session.profile.role) });
+    });
+    return () => { active = false; };
+  }, [navigate]);
 
   async function submit(event: FormEvent) {
     event.preventDefault();
-    setLoading(true); setError(""); setResetSent(false);
+    setLoading(true); setError(""); setResetSent(false); setNotice("");
     try {
+      if (mode === "link") {
+        await signInWithEmailLink(email);
+        setNotice("Enviamos um link de acesso para o seu e-mail. Abra-o neste aparelho para entrar.");
+        return;
+      }
+      if (mode === "signup") {
+        const { session } = await signUp(name, email, password);
+        if (!session) { setNotice("Conta criada. Confirme pelo link enviado ao seu e-mail para entrar."); return; }
+        await navigate({ to: homeForRole(session.profile.role) });
+        return;
+      }
       const session = await signIn(email, password);
       await navigate({ to: homeForRole(session.profile.role) });
     } catch (err) {
@@ -71,15 +94,22 @@ function LoginPage() {
 
 
             <form className="space-y-5" onSubmit={submit}>
+              {mode === "signup" && <div className="space-y-2"><Label htmlFor="name">Nome</Label><Input id="name" autoComplete="name" value={name} onChange={(e) => setName(e.target.value)} required /></div>}
               <div className="space-y-2"><Label htmlFor="email">E-mail</Label><Input id="email" type="email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} required /></div>
-              <div className="space-y-2">
+              {mode !== "link" && <div className="space-y-2">
                 <div className="flex items-center justify-between"><Label htmlFor="password">Senha</Label><button type="button" className="text-xs text-primary hover:underline" onClick={reset}>Esqueci minha senha</button></div>
                 <div className="relative"><Input id="password" type={showPassword ? "text" : "password"} autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} required className="pr-10" /><button type="button" aria-label={showPassword ? "Ocultar senha" : "Mostrar senha"} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground" onClick={() => setShowPassword((v) => !v)}>{showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}</button></div>
-              </div>
+              </div>}
               {error && <p role="alert" className="rounded-md border border-destructive/30 bg-destructive/10 px-3 py-2 text-xs text-destructive">{error}</p>}
+              {notice && <p role="status" className="rounded-md border border-primary/30 bg-primary/10 px-3 py-2 text-xs text-primary">{notice}</p>}
               {resetSent && <p className="rounded-md border border-primary/30 bg-primary/10 px-3 py-2 text-xs text-primary">Se o e-mail estiver cadastrado, você receberá as instruções.</p>}
-              <Button type="submit" variant="command" className="h-11 w-full" disabled={loading}>{loading ? <Loader2 className="animate-spin" /> : <><KeyRound /> Entrar <ArrowRight className="ml-auto" /></>}</Button>
+              <Button type="submit" variant="command" className="h-11 w-full" disabled={loading}>{loading ? <Loader2 className="animate-spin" /> : <><KeyRound /> {mode === "link" ? "Enviar link por e-mail" : mode === "signup" ? "Criar conta" : "Entrar"} <ArrowRight className="ml-auto" /></>}</Button>
             </form>
+            <div className="mt-6 flex flex-col gap-2 text-center text-xs">
+              {mode !== "link" && <button type="button" className="text-primary hover:underline" onClick={() => { setMode("link"); setError(""); setNotice(""); }}>Entrar com link por e-mail (sem senha)</button>}
+              {mode !== "password" && <button type="button" className="text-primary hover:underline" onClick={() => { setMode("password"); setError(""); setNotice(""); }}>Entrar com e-mail e senha</button>}
+              {mode !== "signup" && <button type="button" className="text-muted-foreground hover:underline" onClick={() => { setMode("signup"); setError(""); setNotice(""); }}>Primeiro acesso? Criar conta</button>}
+            </div>
             
           </div>
         </section>

@@ -52,6 +52,34 @@ export async function signIn(email: string, password: string): Promise<Session> 
   return { profile };
 }
 
+/** Link mágico: o Supabase envia um e-mail; ao clicar, a pessoa volta logada para /login. */
+export async function signInWithEmailLink(email: string): Promise<void> {
+  if (!email.includes("@")) throw new Error("Informe um e-mail válido.");
+  const { error } = await supabase.auth.signInWithOtp({
+    email: email.trim(),
+    options: { emailRedirectTo: `${window.location.origin}/login`, shouldCreateUser: true },
+  });
+  if (error) throw new Error("Não foi possível enviar o link agora. Tente novamente em instantes.");
+}
+
+/** Cria conta nova. Toda conta nasce como cliente; promover a advogado é feito pelo escritório. */
+export async function signUp(
+  name: string,
+  email: string,
+  password: string,
+): Promise<{ session: Session | null }> {
+  if (password.length < 8) throw new Error("A senha deve ter ao menos 8 caracteres.");
+  const { data, error } = await supabase.auth.signUp({
+    email: email.trim(),
+    password,
+    options: { emailRedirectTo: `${window.location.origin}/login`, data: { name: name.trim() } },
+  });
+  if (error) throw new Error("Não foi possível criar a conta. Verifique os dados.");
+  if (!data.session || !data.user) return { session: null }; // aguardando confirmação por e-mail
+  const profile = await loadProfile(data.user.id);
+  return { session: profile ? { profile } : null };
+}
+
 export async function requestPasswordReset(email: string): Promise<void> {
   if (!email.includes("@")) throw new Error("Informe um e-mail válido.");
   const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
