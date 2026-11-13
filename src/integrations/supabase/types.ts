@@ -14,7 +14,143 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      audit_logs: {
+        Row: {
+          action: string
+          actor_id: string | null
+          actor_label: string
+          after_data: Json | null
+          before_data: Json | null
+          changed_fields: string[]
+          entity_id: string
+          entity_type: string
+          id: string
+          occurred_at: string
+          owner_id: string
+        }
+        Insert: {
+          action: string
+          actor_id?: string | null
+          actor_label: string
+          after_data?: Json | null
+          before_data?: Json | null
+          changed_fields?: string[]
+          entity_id: string
+          entity_type: string
+          id?: string
+          occurred_at?: string
+          owner_id: string
+        }
+        Update: {
+          action?: string
+          actor_id?: string | null
+          actor_label?: string
+          after_data?: Json | null
+          before_data?: Json | null
+          changed_fields?: string[]
+          entity_id?: string
+          entity_type?: string
+          id?: string
+          occurred_at?: string
+          owner_id?: string
+        }
+        Relationships: []
+      }
+      legal_document_records: {
+        Row: {
+          analysis_status: string
+          category: string
+          created_at: string
+          id: string
+          name: string
+          owner_id: string
+          process_id: string | null
+        }
+        Insert: {
+          analysis_status?: string
+          category?: string
+          created_at?: string
+          id?: string
+          name: string
+          owner_id: string
+          process_id?: string | null
+        }
+        Update: {
+          analysis_status?: string
+          category?: string
+          created_at?: string
+          id?: string
+          name?: string
+          owner_id?: string
+          process_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "legal_document_records_process_id_fkey"
+            columns: ["process_id"]
+            isOneToOne: false
+            referencedRelation: "legal_process_records"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      legal_process_records: {
+        Row: {
+          cnj: string
+          created_at: string
+          id: string
+          owner_id: string
+          status: string
+          subject: string
+        }
+        Insert: {
+          cnj: string
+          created_at?: string
+          id?: string
+          owner_id: string
+          status?: string
+          subject: string
+        }
+        Update: {
+          cnj?: string
+          created_at?: string
+          id?: string
+          owner_id?: string
+          status?: string
+          subject?: string
+        }
+        Relationships: []
+      }
+      resource_permissions: {
+        Row: {
+          created_at: string
+          grantee_id: string
+          id: string
+          owner_id: string
+          permission: string
+          resource_id: string
+          resource_type: string
+        }
+        Insert: {
+          created_at?: string
+          grantee_id: string
+          id?: string
+          owner_id: string
+          permission: string
+          resource_id: string
+          resource_type: string
+        }
+        Update: {
+          created_at?: string
+          grantee_id?: string
+          id?: string
+          owner_id?: string
+          permission?: string
+          resource_id?: string
+          resource_type?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
