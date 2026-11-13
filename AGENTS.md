@@ -15,3 +15,5 @@
 - Browser document-analysis activity is a separately labelled demo history and stores metadata only, never extracted document text or AI results.
 - Reports use a pure filter service and data-driven paginated browser PDFs with an embedded local Unicode font; prepare the blob before a separate download click to preserve mobile user activation.
 - Report periods refer to process last-movement dates and activity dates; never fabricate responsibility where the source has no assignment.
+- Document questions and analysis use typed AI Gateway Responses calls with the existing model; document text stays transient and citations must match the supplied source.
+- Document review rejects pending items and persists only confirmed edits through a replaceable, explicitly browser-local demo repository; audit remains metadata-only.
