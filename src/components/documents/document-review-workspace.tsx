@@ -8,8 +8,12 @@ import type { DocumentAnalysisResult } from "@/lib/ai/document-analysis.function
 import { askDocumentQuestion, type DocumentAnswer } from "@/lib/ai/document-question.functions";
 import type { ReviewItem } from "@/lib/services/document-review";
 import { saveReviewedDocument } from "@/lib/repositories/document-review";
+import { saveCloudReview } from '@/lib/real/records.functions';
+import { useQueryClient } from '@tanstack/react-query';
 export function DocumentReviewWorkspace({ result, text, fileName, processId }: { result: DocumentAnalysisResult; text: string; fileName: string; processId: string }) {
   const ask = useServerFn(askDocumentQuestion);
+  const saveCloud = useServerFn(saveCloudReview); const qc = useQueryClient();
+  const [saving, setSaving] = useState(false);
   const [items, setItems] = useState<ReviewItem[]>(() => [...result.keyPoints.map((point, i) => ({ id: `point-${i}`, kind: "point" as const, text: point, date: null, source: "", status: "pending" as const })), ...result.deadlines.map((deadline, i) => ({ id: `deadline-${i}`, kind: "deadline" as const, text: deadline.description, date: deadline.date, source: deadline.sourceExcerpt, status: "pending" as const }))]);
   const [savedId, setSavedId] = useState("");
   const [saved, setSaved] = useState(false);
@@ -26,10 +30,12 @@ export function DocumentReviewWorkspace({ result, text, fileName, processId }: {
     catch (cause) { setQuestionError(cause instanceof Error ? cause.message : "Não foi possível responder."); }
     finally { setAsking(false); }
   }
-  function save() {
+  async function save() {
     setError("");
-    try { const id = savedId || crypto.randomUUID(); saveReviewedDocument(id, processId, fileName, items); setSavedId(id); setSaved(true); }
+    setSaving(true);
+    try { const id = savedId || crypto.randomUUID(); await saveCloud({data:{id,processId,fileName,items}}); await qc.invalidateQueries({queryKey:['legal-workspace']}); setSavedId(id); setSaved(true); }
     catch (cause) { setError(cause instanceof Error ? cause.message : "Não foi possível salvar."); }
+    finally { setSaving(false); }
   }
   return <div className="space-y-7">
     <section><h3 className="mb-3 text-sm font-semibold">Revisão de pontos principais e prazos</h3><div className="divide-y divide-border">{items.map((item, index) => <div key={item.id} className="space-y-3 py-4"><div className="flex items-center justify-between gap-2"><span className="text-xs font-semibold text-primary">{item.kind === "point" ? "Ponto principal" : "Prazo"} {index + 1}</span><span className="text-xs text-muted-foreground">{item.status === "confirmed" ? "Confirmado" : item.status === "discarded" ? "Descartado" : "Pendente de revisão"}</span></div><Textarea aria-label={`Texto do item ${index + 1}`} value={item.text} disabled={item.status === "discarded"} onChange={(event) => update(item.id, { text: event.target.value, status: "pending" })} />{item.kind === "deadline" && <div><label className="mb-1 block text-xs" htmlFor={item.id}>Data do prazo</label><Input id={item.id} aria-label={`Data do item ${index + 1}`} type="date" value={item.date ?? ""} disabled={item.status === "discarded"} onChange={(event) => update(item.id, { date: event.target.value || null, status: "pending" })}/>{item.source && <p className="mt-2 break-words text-xs text-muted-foreground">Trecho: “{item.source}”</p>}</div>}<div className="flex flex-wrap gap-2"><Button size="sm" variant="quiet" disabled={!item.text.trim() || item.status === "confirmed"} onClick={() => update(item.id, { status: "confirmed" })}><Check/>Confirmar</Button><Button size="sm" variant="quiet" disabled={item.status === "discarded"} onClick={() => update(item.id, { status: "discarded" })}><Trash2/>Descartar</Button></div></div>)}</div><p className="my-3 text-xs text-important">Salvamento demonstrativo neste navegador; o documento completo não será armazenado.</p>{error && <p role="alert" className="mb-3 text-sm text-destructive">{error}</p>}<Button variant="command" disabled={saved || !items.length || items.some((item) => item.status === "pending") || !items.some((item) => item.status === "confirmed")} onClick={save}><Save/>{saved ? "Salvo no processo" : "Salvar itens confirmados no processo"}</Button>{saved && <p role="status" className="mt-2 text-sm text-primary">Itens revisados salvos no processo demonstrativo.</p>}</section>

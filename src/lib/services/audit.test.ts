@@ -8,7 +8,7 @@ test("auditoria exige usuário e data válida", () => {
   assert.equal(auditSchema.parse(entry).actor, "Ricardo Ferreira");
 });
 test("processos, documentos e permissões são auditáveis", () => {
-  for (const entityType of ["process", "document", "permission"]) assert.equal(auditSchema.safeParse({ ...entry, entityType }).success, true);
+  for (const entityType of ["process", "document", "permission", "calendar"]) assert.equal(auditSchema.safeParse({ ...entry, entityType }).success, true);
 });
 test("detalhes preservam valores anteriores e novos", () => {
   const result = auditSchema.parse(entry);

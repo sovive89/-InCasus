@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { SharedCalendar } from "@/components/calendar/shared-calendar";
 
-export const Route = createFileRoute("/advogado/agenda")({
+export const Route = createFileRoute("/_authenticated/advogado/agenda")({
   head: () => ({ meta: [
     { title: "Calendário compartilhado — InCasus" },
     { name: "description", content: "Calendário mensal e semanal de prazos processuais, audiências e responsáveis." },

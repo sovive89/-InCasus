@@ -12,6 +12,10 @@ import { calendarRepository } from "@/lib/repositories/calendar";
 import { clientRepository, processRepository } from "@/lib/repositories";
 import { calendarDays, calendarEventSchema, clientCalendarEvents, eventKinds, eventsOnDay, type CalendarEvent, type CalendarView } from "@/lib/services/calendar";
 import { cn } from "@/lib/utils";
+import { useQueryClient } from '@tanstack/react-query';
+import { useServerFn } from '@tanstack/react-start';
+import { useAccount, useLegalWorkspace } from '@/lib/real/workspace';
+import { saveCalendarRecord, removeCalendarRecord } from '@/lib/real/records.functions';
 
 const kindClasses: Record<CalendarEvent["kind"], string> = {
   deadline: "border-critical/40 bg-critical/10 text-critical",
@@ -22,6 +26,9 @@ const kindClasses: Record<CalendarEvent["kind"], string> = {
 const selectClass = "h-9 w-full min-w-0 rounded-md border border-input bg-surface px-3 text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-ring";
 
 export function SharedCalendar({ clientId }: { clientId?: string }) {
+  const workspace = useLegalWorkspace(); const account = useAccount(); const qc = useQueryClient();
+  const saveCloud = useServerFn(saveCalendarRecord); const removeCloud = useServerFn(removeCalendarRecord);
+  const [busy, setBusy] = useState(false);
   const [events, setEvents] = useState<CalendarEvent[]>([]);
   const [date, setDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -31,13 +38,11 @@ export function SharedCalendar({ clientId }: { clientId?: string }) {
   const [editing, setEditing] = useState<CalendarEvent | null>(null);
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
-  const readOnly = Boolean(clientId);
+  const readOnly = account.role !== 'lawyer';
   useEffect(() => {
-    const refresh = () => setEvents(calendarRepository.list());
-    refresh();
-    return calendarRepository.subscribe(refresh);
-  }, []);
-  const visible = clientId ? clientCalendarEvents(events, clientId) : events;
+    setEvents(workspace.calendar.map((row) => calendarEventSchema.parse({ id:row.id, title:row.title, kind:row.kind, startsAt:row.starts_at, responsible:row.responsible, clientId:row.client_id ?? '', processId:row.process_id ?? '', location:row.location, notes:row.notes })));
+  }, [workspace]);
+  const visible = events;
   const filtered = visible.filter((event) => (!kindFilter || event.kind === kindFilter) && (!responsibleFilter || event.responsible === responsibleFilter));
   const days = calendarDays(date, view);
   const selectedEvents = eventsOnDay(filtered, selectedDate);
@@ -45,7 +50,7 @@ export function SharedCalendar({ clientId }: { clientId?: string }) {
 
   function newEvent(day = selectedDate) {
     setError("");
-    setEditing({ id: crypto.randomUUID(), title: "", kind: "deadline", startsAt: `${format(day, "yyyy-MM-dd")}T09:00`, responsible: "Dra. Helena Duarte", clientId: "", processId: "", location: "", notes: "" });
+    setEditing({ id: crypto.randomUUID(), title: "", kind: "deadline", startsAt: `${format(day, "yyyy-MM-dd")}T09:00`, responsible: account.name, clientId: "", processId: "", location: "", notes: "" });
   }
   function move(direction: number) {
     const next = view === "month" ? addMonths(date, direction) : addWeeks(date, direction);
@@ -54,24 +59,29 @@ export function SharedCalendar({ clientId }: { clientId?: string }) {
   function update(field: keyof CalendarEvent, value: string) {
     setEditing((current) => current ? { ...current, [field]: value } : null);
   }
-  function save(event: FormEvent) {
+  async function save(event: FormEvent) {
     event.preventDefault();
     const result = calendarEventSchema.safeParse(editing);
     if (!result.success) { setError(result.error.issues[0]?.message ?? "Revise os campos."); return; }
+    setBusy(true);
     try {
-      calendarRepository.save(result.data);
+      await saveCloud({ data: result.data });
+      await qc.invalidateQueries({ queryKey:['legal-workspace'] });
       const target = new Date(result.data.startsAt);
       setDate(target); setSelectedDate(target); setEditing(null); setNotice("Compromisso salvo.");
-    } catch { setError("Não foi possível salvar neste navegador. Tente novamente."); }
+    } catch (cause) { setError(cause instanceof Error ? cause.message : 'Não foi possível salvar.'); }
+    finally { setBusy(false); }
   }
-  function remove() {
+  async function remove() {
     if (!editing || !window.confirm("Excluir este compromisso?")) return;
-    try { calendarRepository.remove(editing.id); setEditing(null); setNotice("Compromisso excluído."); }
+    setBusy(true);
+    try { await removeCloud({data:editing.id}); await qc.invalidateQueries({queryKey:['legal-workspace']}); setEditing(null); setNotice("Compromisso excluído."); }
     catch { setError("Não foi possível excluir. Tente novamente."); }
+    finally { setBusy(false); }
   }
   return <>
     <PageHeader eyebrow="Planejamento" title={readOnly ? "Minha agenda" : "Calendário compartilhado"} action={!readOnly ? <Button onClick={() => newEvent()}><Plus />Novo compromisso</Button> : undefined} />
-    <p className="mb-5 border-l-2 border-important pl-3 text-xs leading-5 text-muted-foreground">Agenda demonstrativa · registros disponíveis apenas neste navegador. Compartilhamento entre dispositivos ainda indisponível.</p>
+    {error && !editing && <p role="alert" className="mb-5 text-sm text-destructive">{error}</p>}
     <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
       <div className="flex items-center gap-2">
         <Button variant="outline" size="icon" aria-label="Período anterior" title="Período anterior" onClick={() => move(-1)}><ChevronLeft /></Button>
@@ -108,18 +118,18 @@ export function SharedCalendar({ clientId }: { clientId?: string }) {
       <div className="mb-4 flex items-center justify-between gap-3"><h2 className="text-base font-semibold capitalize">{format(selectedDate, "EEEE, dd 'de' MMMM", { locale: ptBR })}</h2>{!readOnly && <Button variant="ghost" size="icon" title="Adicionar nesta data" aria-label="Adicionar nesta data" onClick={() => newEvent()}><Plus /></Button>}</div>
       {!selectedEvents.length ? <p className="py-6 text-sm text-muted-foreground">Nenhum compromisso nesta data.</p> : <div className="divide-y divide-border">{selectedEvents.map((item) => <div key={item.id} className="flex flex-wrap items-center justify-between gap-3 py-4"><div className="min-w-0"><p className="text-xs text-muted-foreground">{eventKinds[item.kind]} · {format(new Date(item.startsAt), "HH:mm")}</p><h3 className="mt-1 break-words text-sm font-semibold">{item.title}</h3><p className="mt-2 flex items-center gap-2 text-xs text-muted-foreground"><UserRound className="size-3" />{item.responsible}</p>{item.location && <p className="mt-1 break-words text-xs text-muted-foreground">{item.location}</p>}</div><Button variant="outline" size="sm" onClick={() => { setError(""); setEditing(item); }}>{readOnly ? "Ver detalhes" : "Editar"}</Button></div>)}</div>}
     </section>
-    <Dialog open={Boolean(editing)} onOpenChange={(open) => { if (!open) setEditing(null); }}>
+    <Dialog open={Boolean(editing)} onOpenChange={(open) => { if (!busy && !open) setEditing(null); }}>
       <DialogContent className="max-h-[90dvh] w-[calc(100%-2rem)] overflow-y-auto sm:max-w-xl">
         <DialogHeader><DialogTitle>{readOnly ? "Detalhes do compromisso" : events.some((event) => event.id === editing?.id) ? "Editar compromisso" : "Novo compromisso"}</DialogTitle><DialogDescription>{readOnly ? "Compromisso relacionado ao seu caso." : "Prazos, audiências e atribuições do escritório."}</DialogDescription></DialogHeader>
         {editing && (readOnly ? <div className="space-y-4"><h3 className="text-lg font-semibold">{editing.title}</h3><p className="text-sm text-primary">{eventKinds[editing.kind]}</p><p className="flex items-center gap-2 text-sm"><Clock className="size-4" />{format(new Date(editing.startsAt), "dd/MM/yyyy 'às' HH:mm")}</p><p className="flex items-center gap-2 text-sm"><UserRound className="size-4" />{editing.responsible}</p>{editing.location && <p className="flex items-center gap-2 text-sm"><MapPin className="size-4" />{editing.location}</p>}{editing.notes && <p className="whitespace-pre-wrap break-words text-sm text-muted-foreground">{editing.notes}</p>}</div> : <form onSubmit={save} className="space-y-4">
           <div className="space-y-2"><Label htmlFor="event-title">Título</Label><Input id="event-title" required maxLength={180} value={editing.title} onChange={(event) => update("title", event.target.value)} /></div>
           <div className="grid gap-4 sm:grid-cols-2"><div className="space-y-2"><Label htmlFor="event-kind">Tipo</Label><select id="event-kind" className={selectClass} value={editing.kind} onChange={(event) => update("kind", event.target.value)}>{Object.entries(eventKinds).map(([key, label]) => <option key={key} value={key}>{label}</option>)}</select></div><div className="min-w-0 space-y-2"><Label htmlFor="event-date">Data e horário</Label><Input className="min-w-0" id="event-date" type="datetime-local" required value={format(new Date(editing.startsAt), "yyyy-MM-dd'T'HH:mm")} onChange={(event) => { if (event.target.value) update("startsAt", event.target.value); }} /></div></div>
           <div className="space-y-2"><Label htmlFor="event-responsible">Responsável</Label><Input id="event-responsible" required maxLength={100} value={editing.responsible} onChange={(event) => update("responsible", event.target.value)} /></div>
-          <div className="grid gap-4 sm:grid-cols-2"><div className="space-y-2"><Label htmlFor="event-client">Cliente</Label><select id="event-client" className={selectClass} value={editing.clientId} onChange={(event) => { setEditing({ ...editing, clientId: event.target.value, processId: "" }); }}><option value="">Escritório</option>{clientRepository.list().map((client) => <option key={client.id} value={client.id}>{client.name}</option>)}</select></div><div className="space-y-2"><Label htmlFor="event-process">Processo</Label><select id="event-process" className={selectClass} value={editing.processId} onChange={(event) => { const process = processRepository.byId(event.target.value); setEditing({ ...editing, processId: event.target.value, clientId: process?.clientId ?? editing.clientId }); }}><option value="">Sem vínculo</option>{processRepository.list().filter((process) => !editing.clientId || process.clientId === editing.clientId).map((process) => <option key={process.id} value={process.id}>{process.cnj}</option>)}</select></div></div>
+          <div className="grid gap-4 sm:grid-cols-2"><div className="space-y-2"><Label htmlFor="event-process">Processo</Label><select id="event-process" className={selectClass} value={editing.processId} onChange={(event) => setEditing({...editing,processId:event.target.value,clientId:''})}><option value="">Sem vínculo</option>{workspace.processes.map((p)=><option key={p.id} value={p.id}>{p.cnj}</option>)}</select></div><div className="space-y-2"><Label htmlFor="event-client">Cliente com acesso</Label><select id="event-client" className={selectClass} value={editing.clientId} onChange={(event)=>update('clientId',event.target.value)}><option value="">Escritório</option>{workspace.permissions.filter((p)=>p.resource_type==='process' && p.resource_id===editing.processId).map((p)=><option key={p.id} value={p.grantee_id}>{p.grantee_id}</option>)}</select></div></div>
           <div className="space-y-2"><Label htmlFor="event-location">Local</Label><Input id="event-location" maxLength={240} value={editing.location} onChange={(event) => update("location", event.target.value)} /></div>
           <div className="space-y-2"><Label htmlFor="event-notes">Observações</Label><Textarea id="event-notes" maxLength={2000} value={editing.notes} onChange={(event) => update("notes", event.target.value)} /></div>
           {error && <p role="alert" className="text-sm text-destructive">{error}</p>}
-          <div className="flex justify-between gap-2">{events.some((event) => event.id === editing.id) ? <Button type="button" variant="ghost" className="text-destructive" onClick={remove}><Trash2 />Excluir</Button> : <span />}<Button type="submit"><CalendarDays />Salvar compromisso</Button></div>
+          <div className="flex justify-between gap-2">{events.some((event) => event.id === editing.id) ? <Button disabled={busy} type="button" variant="ghost" className="text-destructive" onClick={()=>void remove()}><Trash2 />Excluir</Button> : <span />}<Button disabled={busy} type="submit"><CalendarDays />{busy ? 'Salvando…' : 'Salvar compromisso'}</Button></div>
         </form>)}
       </DialogContent>
     </Dialog>

@@ -10,7 +10,7 @@ import { filterReportRows, getReportRows, reportFiltersSchema, type ReportFilter
 import { createReportPdf } from "@/lib/services/report-pdf";
 import { deliverFile } from "@/lib/download";
 
-export const Route = createFileRoute("/advogado/relatorios")({
+export const Route = createFileRoute("/_authenticated/advogado/relatorios")({
   head: () => ({ meta: [
     { title: "Relatórios em PDF — InCasus" },
     { name: "description", content: "Relatórios de processos e atividades por cliente, período e responsável." },
