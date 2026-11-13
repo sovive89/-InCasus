@@ -15,6 +15,13 @@
       "when": 1794529533524,
       "tag": "0001_correct_audit_create_action",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1794529595789,
+      "tag": "0002_lock_audit_write_privileges",
+      "breakpoints": true
     }
   ]
 }
