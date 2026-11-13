@@ -24,8 +24,14 @@
 - [ ] Habilitar compartilhamento entre dispositivos (aguarda Lovable Cloud e autenticação real)
 
 ## Auditoria
+ 
 - [x] Criar histórico protegido para processos, documentos e permissões
 - [x] Registrar ações demonstrativas de documentos sem confundi-las com registros oficiais
 - [x] Adicionar consulta do histórico com filtros e detalhes
 - [x] Validar captura automática e proteção dos registros
 - [ ] Conectar alterações das telas e validar histórico oficial com usuário autenticado (aguarda substituição do acesso e dos dados demonstrativos por contas reais)
+
+## Relatórios em PDF
+- [x] Criar filtros por cliente, período e responsável
+- [x] Gerar PDF de processos e atividades com paginação
+- [x] Verificar download e conteúdo do PDF em computador e celular

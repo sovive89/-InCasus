@@ -13,3 +13,5 @@
 - The calendar currently uses browser-local demo storage shared across demo profiles, never as real authorization; cross-device access requires authenticated Cloud persistence.
 - Official legal audit is captured by database triggers on durable process, document and resource-permission records; authenticated owners can read but cannot append, modify or remove audit entries.
 - Browser document-analysis activity is a separately labelled demo history and stores metadata only, never extracted document text or AI results.
+- Reports use a pure filter service and data-driven paginated browser PDFs with an embedded local Unicode font; prepare the blob before a separate download click to preserve mobile user activation.
+- Report periods refer to process last-movement dates and activity dates; never fabricate responsibility where the source has no assignment.
