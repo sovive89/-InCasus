@@ -15,3 +15,10 @@
 - [x] Extrair texto e gerar resumo com pontos principais e prazos via IA
 - [x] Exibir estados de processamento, erros e revisão profissional
 - [ ] Validar o fluxo completo em computador e celular
+
+## Calendário compartilhado
+- [ ] Criar visualizações mensal e semanal com navegação por período
+- [ ] Registrar e editar prazos, audiências e responsáveis
+- [ ] Exibir compromissos do cliente na mesma agenda demonstrativa
+- [ ] Validar calendário em computador e celular
+- [ ] Habilitar compartilhamento entre dispositivos (aguarda Lovable Cloud e autenticação real)
