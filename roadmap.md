@@ -22,3 +22,10 @@
 - [x] Exibir compromissos do cliente na mesma agenda demonstrativa
 - [x] Validar calendário em computador e celular
 - [ ] Habilitar compartilhamento entre dispositivos (aguarda Lovable Cloud e autenticação real)
+
+## Auditoria
+- [x] Criar histórico protegido para processos, documentos e permissões
+- [x] Registrar ações demonstrativas de documentos sem confundi-las com registros oficiais
+- [x] Adicionar consulta do histórico com filtros e detalhes
+- [x] Validar captura automática e proteção dos registros
+- [ ] Conectar alterações das telas e validar histórico oficial com usuário autenticado (aguarda substituição do acesso e dos dados demonstrativos por contas reais)

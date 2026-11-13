@@ -11,3 +11,5 @@
 
 - Calendar date ranges and validation live in the calendar service, with a replaceable repository adapter; this keeps monthly/weekly views consistent.
 - The calendar currently uses browser-local demo storage shared across demo profiles, never as real authorization; cross-device access requires authenticated Cloud persistence.
+- Official legal audit is captured by database triggers on durable process, document and resource-permission records; authenticated owners can read but cannot append, modify or remove audit entries.
+- Browser document-analysis activity is a separately labelled demo history and stores metadata only, never extracted document text or AI results.
