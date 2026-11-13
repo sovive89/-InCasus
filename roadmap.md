@@ -1,5 +1,11 @@
 # Roadmap
 
+## Contas e dados reais
+- [ ] Criar perfis e acesso real com papéis protegidos
+- [ ] Retirar a escolha de advogado do acesso de clientes
+- [ ] Conectar painéis, processos, calendário e auditoria às contas reais
+- [ ] Validar persistência e isolamento entre advogado e cliente
+
 - [x] Definir design system azul petróleo premium
 - [x] Criar tipos, dados mockados, repositórios e serviços
 - [x] Preparar AI Gateway, WhatsApp e voz para integrações futuras
