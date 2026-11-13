@@ -7,6 +7,7 @@ import { processRepository } from "@/lib/repositories";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { recordDemoDocumentAction } from "@/lib/repositories/audit";
 
 export function DocumentAnalysisPanel() {
   const analyze = useServerFn(analyzeLegalDocument);
@@ -18,12 +19,20 @@ export function DocumentAnalysisPanel() {
   const [phase, setPhase] = useState<"idle" | "extracting" | "analyzing">("idle");
   const [error, setError] = useState("");
   const [result, setResult] = useState<DocumentAnalysisResult | null>(null);
+  const [auditWarning, setAuditWarning] = useState("");
+
+  function audit(action: string, details: Record<string, unknown>) {
+    try { recordDemoDocumentAction(`${processId}:${file?.name ?? "documento"}`, action, details); }
+    catch { setAuditWarning("Não foi possível registrar esta ação no histórico demonstrativo."); }
+  }
 
   async function submit() {
     const process = processes.find((item) => item.id === processId);
     if (!file || !process || phase !== "idle") return;
     setError("");
     setResult(null);
+    setAuditWarning("");
+    audit("Análise solicitada", { arquivo: file.name, processo: process.cnj, tamanhoBytes: file.size });
     try {
       setPhase("extracting");
       const { extractDocumentText } = await import("@/lib/document-text");
@@ -34,7 +43,9 @@ export function DocumentAnalysisPanel() {
       });
       if (!response.ok) throw new Error(response.error);
       setResult(response.analysis);
+      audit("Análise concluída", { arquivo: file.name, processo: process.cnj, prazosIdentificados: response.analysis.deadlines.length });
     } catch (cause) {
+      audit("Análise não concluída", { arquivo: file.name, processo: process.cnj });
       setError(cause instanceof Error ? cause.message : "Não foi possível analisar o documento.");
     } finally {
       setPhase("idle");
@@ -52,6 +63,7 @@ export function DocumentAnalysisPanel() {
     <DialogTrigger asChild><Button variant="command"><Upload />Enviar e analisar</Button></DialogTrigger>
     <DialogContent className="max-h-[90vh] max-w-3xl overflow-y-auto">
       <DialogHeader><DialogTitle className="font-display">Analisar documento do processo</DialogTitle><DialogDescription>Envie PDF, DOCX ou TXT. O conteúdo será usado para gerar o resumo e não será salvo nesta etapa.</DialogDescription></DialogHeader>
+      {auditWarning && <p role="alert" className="text-xs text-important">{auditWarning}</p>}
       {!result ? <div className="space-y-5">
         <div><label className="mb-2 block text-xs font-medium">Processo</label><Select value={processId} onValueChange={setProcessId} disabled={phase !== "idle"}><SelectTrigger className="h-11 bg-surface"><SelectValue /></SelectTrigger><SelectContent>{processes.map((process) => <SelectItem key={process.id} value={process.id}>{process.cnj} · {process.subject}</SelectItem>)}</SelectContent></Select></div>
         <div><label className="mb-2 block text-xs font-medium">Documento</label><input ref={inputRef} type="file" accept=".pdf,.docx,.txt,application/pdf,text/plain,application/vnd.openxmlformats-officedocument.wordprocessingml.document" className="sr-only" onChange={(event) => { setFile(event.target.files?.[0] ?? null); setError(""); }} /><button type="button" onClick={() => inputRef.current?.click()} disabled={phase !== "idle"} className="flex min-h-32 w-full flex-col items-center justify-center rounded-lg border border-dashed border-border bg-surface px-5 text-center transition hover:border-primary/50 disabled:opacity-50"><FileText className="mb-3 size-6 text-primary"/><span className="text-sm font-medium">{file?.name ?? "Selecionar arquivo"}</span><span className="mt-1 text-xs text-muted-foreground">PDF, DOCX ou TXT · até 10 MB</span></button></div>
