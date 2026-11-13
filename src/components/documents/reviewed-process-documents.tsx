@@ -1,0 +1,8 @@
+import { useEffect, useState } from "react";
+import { readReviewedDocuments } from "@/lib/repositories/document-review";
+import type { ReviewedDocument } from "@/lib/services/document-review";
+export function ReviewedProcessDocuments({ processId }: { processId: string }) {
+  const [documents, setDocuments] = useState<ReviewedDocument[]>([]);
+  useEffect(() => { setDocuments(readReviewedDocuments(processId)); }, [processId]);
+  return <section className="border-t border-border pt-5"><h2 className="mb-3 text-sm font-semibold">Pontos e prazos revisados</h2><p className="mb-4 text-xs text-important">Registros demonstrativos salvos neste navegador.</p>{documents.length ? documents.map((doc) => <div key={doc.id} className="mb-5"><h3 className="break-words text-sm font-semibold">{doc.fileName}</h3><p className="mt-1 text-xs text-muted-foreground">{doc.reviewer} · {new Date(doc.reviewedAt).toLocaleString("pt-BR")}</p><ul className="mt-3 space-y-3">{doc.items.map((item) => <li key={item.id} className="text-sm"><span className="text-xs text-primary">{item.kind === "deadline" ? `Prazo · ${item.date ?? "Data a confirmar"}` : "Ponto confirmado"}</span><p className="mt-1 break-words">{item.text}</p>{item.source && <p className="mt-1 break-words text-xs text-muted-foreground">Fonte: {item.source}</p>}</li>)}</ul></div>) : <p className="text-sm text-muted-foreground">Nenhum item revisado salvo.</p>}</section>;
+}
