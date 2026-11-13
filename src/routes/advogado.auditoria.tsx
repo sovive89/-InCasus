@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { PageHeader } from "@/components/domain/page-header";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { readDemoAudit } from "@/lib/repositories/audit";
-import { filterAudit, type AuditEntry } from "@/lib/services/audit";
+import { auditSchema, filterAudit, type AuditEntry } from "@/lib/services/audit";
 import { listAuditLogs } from "@/lib/services/audit.functions";
 
 export const Route = createFileRoute("/advogado/auditoria")({
@@ -34,7 +34,7 @@ function Page() {
   useEffect(() => { setEntries(readDemoAudit()); }, []);
   async function refresh(next = source) {
     setSource(next); setError(""); setEntries([]); setLoading(true);
-    try { setEntries(next === "demo" ? readDemoAudit() : await fetchOfficial()); }
+    try { setEntries(next === "demo" ? readDemoAudit() : auditSchema.array().parse(JSON.parse(await fetchOfficial()))); }
     catch { setError("O histórico oficial exige uma conta autenticada na Lovable Cloud; o acesso atual é demonstrativo."); }
     finally { setLoading(false); }
   }
