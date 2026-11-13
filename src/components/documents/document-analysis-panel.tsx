@@ -9,11 +9,12 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { DocumentReviewWorkspace } from "./document-review-workspace";
 import { recordDemoDocumentAction } from "@/lib/repositories/audit";
+import { useLegalWorkspace } from '@/lib/real/workspace';
 
 export function DocumentAnalysisPanel() {
   const analyze = useServerFn(analyzeLegalDocument);
   const inputRef = useRef<HTMLInputElement>(null);
-  const processes = processRepository.list();
+  const processes = useLegalWorkspace().processes;
   const [open, setOpen] = useState(false);
   const [processId, setProcessId] = useState(processes[0]?.id ?? "");
   const [file, setFile] = useState<File | null>(null);

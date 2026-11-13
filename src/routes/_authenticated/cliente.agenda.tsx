@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { SharedCalendar } from "@/components/calendar/shared-calendar";
-export const Route = createFileRoute("/cliente/agenda")({
+export const Route = createFileRoute("/_authenticated/cliente/agenda")({
   head: () => ({ meta: [
     { title: "Minha agenda — InCasus" },
     { name: "description", content: "Seus prazos e audiências em um calendário mensal e semanal." },
@@ -11,4 +11,4 @@ export const Route = createFileRoute("/cliente/agenda")({
   ] }),
   component: Page,
 });
-function Page() { return <SharedCalendar clientId="c-1" />; }
+function Page() { return <SharedCalendar  />; }

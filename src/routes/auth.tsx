@@ -1,0 +1,3 @@
+import { createFileRoute } from '@tanstack/react-router';
+import { LoginPage } from './login';
+export const Route = createFileRoute('/auth')({ head: () => ({ meta: [{ title: 'Entrar na sua conta — InCasus' }, { name: 'description', content: 'Acesso seguro à sua conta InCasus.' }, { property: 'og:title', content: 'Entrar na sua conta — InCasus' }, { property: 'og:description', content: 'Acesso seguro à sua conta InCasus.' }, { property: 'og:type', content: 'website' }, { name: 'twitter:card', content: 'summary_large_image' }] }), component: LoginPage });

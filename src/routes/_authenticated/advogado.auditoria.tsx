@@ -11,7 +11,7 @@ import { readDemoAudit } from "@/lib/repositories/audit";
 import { auditSchema, filterAudit, type AuditEntry } from "@/lib/services/audit";
 import { listAuditLogs } from "@/lib/services/audit.functions";
 
-export const Route = createFileRoute("/advogado/auditoria")({
+export const Route = createFileRoute("/_authenticated/advogado/auditoria")({
   head: () => ({ meta: [
     { title: "Trilha de auditoria — InCasus" },
     { name: "description", content: "Histórico de alterações em processos, documentos e permissões com usuário, data e detalhes." },

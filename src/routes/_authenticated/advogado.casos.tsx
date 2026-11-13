@@ -1,0 +1,4 @@
+import { RealProcesses } from "@/components/real/workspace-pages";
+import { createFileRoute } from "@tanstack/react-router"; import { PageHeader } from "@/components/domain/page-header"; import { StatusBadge } from "@/components/domain/status-badge"; import { caseRepository,clientRepository,processRepository,documentRepository,taskRepository } from "@/lib/repositories"; import { caseStatusLabel } from "@/lib/domain/labels";
+export const Route=createFileRoute("/_authenticated/advogado/casos")({head:()=>({meta:[{title:"Casos — InCasus"},{name:"description",content:"Casos jurídicos, prioridades e itens relacionados."},{property:"og:title",content:"Casos — InCasus"},{property:"og:description",content:"Casos jurídicos, prioridades e itens relacionados."},{property:"og:type",content:"website"},{name:"twitter:card",content:"summary_large_image"}]}),component:Page});
+function Page() { return <RealProcesses/>; }

@@ -56,6 +56,56 @@ export type Database = {
         }
         Relationships: []
       }
+      calendar_records: {
+        Row: {
+          client_id: string | null
+          created_at: string
+          id: string
+          kind: string
+          location: string
+          notes: string
+          owner_id: string
+          process_id: string | null
+          responsible: string
+          starts_at: string
+          title: string
+        }
+        Insert: {
+          client_id?: string | null
+          created_at?: string
+          id?: string
+          kind: string
+          location?: string
+          notes?: string
+          owner_id: string
+          process_id?: string | null
+          responsible: string
+          starts_at: string
+          title: string
+        }
+        Update: {
+          client_id?: string | null
+          created_at?: string
+          id?: string
+          kind?: string
+          location?: string
+          notes?: string
+          owner_id?: string
+          process_id?: string | null
+          responsible?: string
+          starts_at?: string
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "calendar_records_process_id_fkey"
+            columns: ["process_id"]
+            isOneToOne: false
+            referencedRelation: "legal_process_records"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       legal_document_records: {
         Row: {
           analysis_status: string
@@ -65,6 +115,9 @@ export type Database = {
           name: string
           owner_id: string
           process_id: string | null
+          reviewed_at: string | null
+          reviewed_items: Json
+          reviewer_id: string | null
         }
         Insert: {
           analysis_status?: string
@@ -74,6 +127,9 @@ export type Database = {
           name: string
           owner_id: string
           process_id?: string | null
+          reviewed_at?: string | null
+          reviewed_items?: Json
+          reviewer_id?: string | null
         }
         Update: {
           analysis_status?: string
@@ -83,6 +139,9 @@ export type Database = {
           name?: string
           owner_id?: string
           process_id?: string | null
+          reviewed_at?: string | null
+          reviewed_items?: Json
+          reviewer_id?: string | null
         }
         Relationships: [
           {
@@ -121,6 +180,30 @@ export type Database = {
         }
         Relationships: []
       }
+      profiles: {
+        Row: {
+          avatar_url: string
+          created_at: string
+          display_name: string
+          id: string
+          oab_number: string
+        }
+        Insert: {
+          avatar_url?: string
+          created_at?: string
+          display_name?: string
+          id: string
+          oab_number?: string
+        }
+        Update: {
+          avatar_url?: string
+          created_at?: string
+          display_name?: string
+          id?: string
+          oab_number?: string
+        }
+        Relationships: []
+      }
       resource_permissions: {
         Row: {
           created_at: string
@@ -151,12 +234,33 @@ export type Database = {
         }
         Relationships: []
       }
+      user_roles: {
+        Row: {
+          id: string
+          role: string
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role: string
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_legal_role: {
+        Args: { wanted: string; who: string }
+        Returns: boolean
+      }
     }
     Enums: {
       [_ in never]: never

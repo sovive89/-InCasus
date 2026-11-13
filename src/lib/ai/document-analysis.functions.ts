@@ -1,6 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { streamResponse, GatewayError } from "@lovable.dev/ai-gateway";
+import { requireSupabaseAuth } from '@/integrations/supabase/auth-middleware';
 
 const inputSchema = z.object({
   fileName: z.string().min(1).max(180),
@@ -54,8 +55,11 @@ const responseSchema = {
 } as const;
 
 export const analyzeLegalDocument = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
   .inputValidator((input: unknown) => inputSchema.parse(input))
-  .handler(async ({ data }): Promise<AnalyzeDocumentResponse> => {
+  .handler(async ({ data, context }): Promise<AnalyzeDocumentResponse> => {
+    const { data: lawyer } = await context.supabase.rpc('has_legal_role', { who:context.userId, wanted:'lawyer' });
+    if (!lawyer) return {ok:false,error:'Acesso profissional necessário.'};
     try {
       const stream = await streamResponse({
         model: "openai/gpt-6-astra",
