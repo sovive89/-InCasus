@@ -19,6 +19,7 @@ const nav = [
   { to: "/advogado/minutas", label: "Minutas", icon: FilePenLine },
   { to: "/advogado/notificacoes", label: "Notificações", icon: Bell },
   { to: "/advogado/auditoria", label: "Auditoria", icon: History },
+  { to: "/advogado/relatorios", label: "Relatórios", icon: Files },
 ] as const;
 
 export function LawyerShell({ children }: { children: ReactNode }) {
