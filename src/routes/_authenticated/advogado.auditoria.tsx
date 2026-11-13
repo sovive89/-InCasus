@@ -20,7 +20,7 @@ export const Route = createFileRoute("/_authenticated/advogado/auditoria")({
     { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary_large_image" },
   ] }), component: Page,
 });
-const labels = { process: "Processo", document: "Documento", permission: "Permissão" };
+const labels = { process: "Processo", document: "Documento", permission: "Permissão", calendar: "Agenda" };
 const actions: Record<string, string> = { create: "Criação", update: "Alteração", delete: "Exclusão" };
 const selectClass = "h-9 w-full rounded-md border border-input bg-surface px-3 text-sm text-foreground";
 function Page() {
