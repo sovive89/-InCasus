@@ -14,7 +14,7 @@
 - [x] Criar envio transitório de documentos por processo
 - [x] Extrair texto e gerar resumo com pontos principais e prazos via IA
 - [x] Exibir estados de processamento, erros e revisão profissional
-- [ ] Validar análise de documentos em computador e celular (aguarda disponibilidade da Lovable Cloud)
+- [x] Validar análise de documentos em computador e celular
 
 ## Calendário compartilhado
 - [x] Criar visualizações mensal e semanal com navegação por período
@@ -35,3 +35,9 @@
 - [x] Criar filtros por cliente, período e responsável
 - [x] Gerar PDF de processos e atividades com paginação
 - [x] Verificar download e conteúdo do PDF em computador e celular
+
+## Perguntas e revisão de documentos
+- [x] Corrigir declaração Mammoth e validar compilação
+- [x] Responder perguntas com trechos dos documentos via AI Gateway
+- [x] Editar, confirmar ou descartar pontos e prazos antes de salvar
+- [x] Exibir itens revisados no processo e validar o fluxo
