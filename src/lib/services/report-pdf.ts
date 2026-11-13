@@ -39,9 +39,15 @@ export async function createReportPdf(rows: ReportRow[], filters: ReportFilters,
     paragraph(`${section === "process" ? "Processos" : "Atividades"} (${items.length})`, 13, 5);
     if (!items.length) paragraph("Nenhum registro no filtro selecionado.");
     for (const row of items) {
-      ensureSpace(38);
+      const metadata = `${row.client} | ${row.kind}\nData: ${new Date(row.date).toLocaleString("pt-BR")} | Responsável: ${row.responsible}`;
+      doc.setFontSize(11);
+      const titleHeight = (doc.splitTextToSize(row.title, width) as string[]).length * 4.95 + 1;
+      doc.setFontSize(9);
+      const metadataHeight = (doc.splitTextToSize(metadata, width) as string[]).length * 4.05 + 2;
+      const detailsHeight = row.details ? (doc.splitTextToSize(row.details, width) as string[]).length * 4.05 + 5 : 4;
+      ensureSpace(Math.min(255, titleHeight + metadataHeight + detailsHeight));
       paragraph(row.title, 11, 1);
-      paragraph(`${row.client} | ${row.kind}\nData: ${new Date(row.date).toLocaleString("pt-BR")} | Responsável: ${row.responsible}`, 9, 2);
+      paragraph(metadata, 9, 2);
       if (row.details) paragraph(row.details, 9, 5);
       else y += 4;
     }

@@ -32,6 +32,6 @@
 - [ ] Conectar alterações das telas e validar histórico oficial com usuário autenticado (aguarda substituição do acesso e dos dados demonstrativos por contas reais)
 
 ## Relatórios em PDF
-- [ ] Criar filtros por cliente, período e responsável
-- [ ] Gerar PDF de processos e atividades com paginação
-- [ ] Verificar download e conteúdo do PDF em computador e celular
+- [x] Criar filtros por cliente, período e responsável
+- [x] Gerar PDF de processos e atividades com paginação
+- [x] Verificar download e conteúdo do PDF em computador e celular
