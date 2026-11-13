@@ -52,7 +52,6 @@ export async function createReportPdf(rows: ReportRow[], filters: ReportFilters,
       else y += 4;
     }
   }
-  ensureSpace(25);
   paragraph(AI_DISCLAIMER, 8);
   const pages = doc.getNumberOfPages();
   for (let page = 1; page <= pages; page++) {
