@@ -35,3 +35,9 @@
 - [x] Criar filtros por cliente, período e responsável
 - [x] Gerar PDF de processos e atividades com paginação
 - [x] Verificar download e conteúdo do PDF em computador e celular
+
+## Perguntas e revisão de documentos
+- [ ] Corrigir declaração Mammoth e validar compilação
+- [ ] Responder perguntas com trechos dos documentos via AI Gateway
+- [ ] Editar, confirmar ou descartar pontos e prazos antes de salvar
+- [ ] Exibir itens revisados no processo e validar o fluxo
