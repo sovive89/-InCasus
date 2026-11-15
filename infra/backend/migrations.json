@@ -1,0 +1,6 @@
+[
+ "infra/supabase/migrations/20261115060921_standalone_core.sql",
+ "supabase/migrations/20261113022610_office_procurement.sql",
+ "supabase/migrations/20261115053909_dossier_client_case_records.sql",
+ "supabase/migrations/20261115060923_dossier_case_documents.sql"
+]
