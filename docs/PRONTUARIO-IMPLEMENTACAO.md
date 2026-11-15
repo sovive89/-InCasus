@@ -1,4 +1,6 @@
-# Prontuário: primeira entrega persistente
+# Prontuário: implementação persistente
+
+Atualização: notas com versões e originais privados já estão implementados e foram validados no backend local independente. Consulte [a preparação e publicação](BACKEND-INDEPENDENTE.md) e [os resultados de verificação](VERIFICACAO-PRONTUARIO.md).
 
 ## Implementado
 
@@ -29,6 +31,6 @@ TypeScript, build de produção, validação de entradas e testes SQL em Postgre
 
 ## Próximas entregas
 
-Notas, documentos, originais de provas, minutas e versões por caso; vinculação a processos existentes; convites e consentimento; resumos evolutivos e RAG autorizado; integrações de mensagens, assinatura e notificações. As tabelas da fundação para esses recursos são preparação, ainda sem fluxo de aplicação funcional.
+Minutas geradas, vinculação a processos existentes, convites e consentimento, compartilhamento aprovado com o cliente, resumos evolutivos e RAG autorizado; integrações de mensagens, assinatura e notificações. As notas internas com versões e o recebimento de originais por caso já têm fluxo funcional no ambiente local.
 
 Os processos e a agenda existentes continuam em seus próprios registros; não há migração automática dos mocks nem alegação de integração já concluída.

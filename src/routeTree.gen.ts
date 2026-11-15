@@ -36,6 +36,7 @@ import { Route as AuthenticatedClienteDocumentosRouteImport } from './routes/_au
 import { Route as AuthenticatedClienteNotificacoesRouteImport } from './routes/_authenticated/cliente.notificacoes'
 import { Route as AuthenticatedClientePerfilRouteImport } from './routes/_authenticated/cliente.perfil'
 import { Route as AuthenticatedClienteProcessosRouteImport } from './routes/_authenticated/cliente.processos'
+import { Route as AuthenticatedAdvogadoClientesIndexRouteImport } from './routes/_authenticated/advogado.clientes.index'
 import { Route as AuthenticatedAdvogadoClientesIdRouteImport } from './routes/_authenticated/advogado.clientes.$id'
 import { Route as AuthenticatedAdvogadoMinutasIdRouteImport } from './routes/_authenticated/advogado.minutas.$id'
 import { Route as AuthenticatedAdvogadoProcessosIdRouteImport } from './routes/_authenticated/advogado.processos.$id'
@@ -194,6 +195,12 @@ const AuthenticatedClienteProcessosRoute =
     path: '/processos',
     getParentRoute: () => AuthenticatedClienteRoute,
   } as any)
+const AuthenticatedAdvogadoClientesIndexRoute =
+  AuthenticatedAdvogadoClientesIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedAdvogadoClientesRoute,
+  } as any)
 const AuthenticatedAdvogadoClientesIdRoute =
   AuthenticatedAdvogadoClientesIdRouteImport.update({
     id: '/$id',
@@ -243,6 +250,7 @@ export interface FileRoutesByFullPath {
   '/advogado/clientes/$id': typeof AuthenticatedAdvogadoClientesIdRoute
   '/advogado/minutas/$id': typeof AuthenticatedAdvogadoMinutasIdRoute
   '/advogado/processos/$id': typeof AuthenticatedAdvogadoProcessosIdRoute
+  '/advogado/clientes/': typeof AuthenticatedAdvogadoClientesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -254,7 +262,6 @@ export interface FileRoutesByTo {
   '/advogado/assistente': typeof AuthenticatedAdvogadoAssistenteRoute
   '/advogado/auditoria': typeof AuthenticatedAdvogadoAuditoriaRoute
   '/advogado/casos': typeof AuthenticatedAdvogadoCasosRoute
-  '/advogado/clientes': typeof AuthenticatedAdvogadoClientesRouteWithChildren
   '/advogado/dashboard': typeof AuthenticatedAdvogadoDashboardRoute
   '/advogado/documentos': typeof AuthenticatedAdvogadoDocumentosRoute
   '/advogado/minutas': typeof AuthenticatedAdvogadoMinutasRouteWithChildren
@@ -273,6 +280,7 @@ export interface FileRoutesByTo {
   '/advogado/clientes/$id': typeof AuthenticatedAdvogadoClientesIdRoute
   '/advogado/minutas/$id': typeof AuthenticatedAdvogadoMinutasIdRoute
   '/advogado/processos/$id': typeof AuthenticatedAdvogadoProcessosIdRoute
+  '/advogado/clientes': typeof AuthenticatedAdvogadoClientesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -306,6 +314,7 @@ export interface FileRoutesById {
   '/_authenticated/advogado/clientes/$id': typeof AuthenticatedAdvogadoClientesIdRoute
   '/_authenticated/advogado/minutas/$id': typeof AuthenticatedAdvogadoMinutasIdRoute
   '/_authenticated/advogado/processos/$id': typeof AuthenticatedAdvogadoProcessosIdRoute
+  '/_authenticated/advogado/clientes/': typeof AuthenticatedAdvogadoClientesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -339,6 +348,7 @@ export interface FileRouteTypes {
     | '/advogado/clientes/$id'
     | '/advogado/minutas/$id'
     | '/advogado/processos/$id'
+    | '/advogado/clientes/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -350,7 +360,6 @@ export interface FileRouteTypes {
     | '/advogado/assistente'
     | '/advogado/auditoria'
     | '/advogado/casos'
-    | '/advogado/clientes'
     | '/advogado/dashboard'
     | '/advogado/documentos'
     | '/advogado/minutas'
@@ -369,6 +378,7 @@ export interface FileRouteTypes {
     | '/advogado/clientes/$id'
     | '/advogado/minutas/$id'
     | '/advogado/processos/$id'
+    | '/advogado/clientes'
   id:
     | '__root__'
     | '/'
@@ -401,6 +411,7 @@ export interface FileRouteTypes {
     | '/_authenticated/advogado/clientes/$id'
     | '/_authenticated/advogado/minutas/$id'
     | '/_authenticated/advogado/processos/$id'
+    | '/_authenticated/advogado/clientes/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -602,6 +613,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedClienteProcessosRouteImport
       parentRoute: typeof AuthenticatedClienteRoute
     }
+    '/_authenticated/advogado/clientes/': {
+      id: '/_authenticated/advogado/clientes/'
+      path: '/'
+      fullPath: '/advogado/clientes/'
+      preLoaderRoute: typeof AuthenticatedAdvogadoClientesIndexRouteImport
+      parentRoute: typeof AuthenticatedAdvogadoClientesRoute
+    }
     '/_authenticated/advogado/clientes/$id': {
       id: '/_authenticated/advogado/clientes/$id'
       path: '/$id'
@@ -628,11 +646,14 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedAdvogadoClientesRouteChildren {
   AuthenticatedAdvogadoClientesIdRoute: typeof AuthenticatedAdvogadoClientesIdRoute
+  AuthenticatedAdvogadoClientesIndexRoute: typeof AuthenticatedAdvogadoClientesIndexRoute
 }
 
 const AuthenticatedAdvogadoClientesRouteChildren: AuthenticatedAdvogadoClientesRouteChildren =
   {
     AuthenticatedAdvogadoClientesIdRoute: AuthenticatedAdvogadoClientesIdRoute,
+    AuthenticatedAdvogadoClientesIndexRoute:
+      AuthenticatedAdvogadoClientesIndexRoute,
   }
 
 const AuthenticatedAdvogadoClientesRouteWithChildren =

@@ -1,5 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { DossierWorkspace } from "@/components/dossier/workspace";
+import { createFileRoute, Outlet } from "@tanstack/react-router";
 export const Route = createFileRoute("/_authenticated/advogado/clientes")({
   head: () => ({
     meta: [
@@ -7,5 +6,5 @@ export const Route = createFileRoute("/_authenticated/advogado/clientes")({
       { name: "description", content: "Prontuários e casos dos clientes do escritório." },
     ],
   }),
-  component: () => <DossierWorkspace />,
+  component: Outlet,
 });

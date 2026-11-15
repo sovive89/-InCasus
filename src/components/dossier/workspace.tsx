@@ -1,3 +1,4 @@
+import { CaseRecords } from "./case-records";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { Link } from "@tanstack/react-router";
@@ -288,6 +289,7 @@ export function DossierWorkspace({
                   <p className="mt-4 text-xs text-muted-foreground">
                     Cadastrado em {new Date(c.created_at).toLocaleDateString("pt-BR")}
                   </p>
+                  <CaseRecords record={c} />
                 </article>
               ))}
               {!cases.length && (
