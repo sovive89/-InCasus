@@ -1,0 +1,17 @@
+FROM node:24-alpine AS build
+WORKDIR /app
+COPY package.json package-lock.json ./
+RUN npm ci
+COPY . .
+ARG VITE_SUPABASE_URL
+ARG VITE_SUPABASE_PUBLISHABLE_KEY
+ARG VITE_GOOGLE_AUTH_ENABLED=false
+ENV VITE_SUPABASE_URL=$VITE_SUPABASE_URL VITE_SUPABASE_PUBLISHABLE_KEY=$VITE_SUPABASE_PUBLISHABLE_KEY VITE_GOOGLE_AUTH_ENABLED=$VITE_GOOGLE_AUTH_ENABLED
+RUN npm run build
+FROM node:24-alpine AS runtime
+ENV NODE_ENV=production HOST=0.0.0.0 PORT=8080
+WORKDIR /app
+COPY --from=build --chown=node:node /app/.output ./.output
+USER node
+EXPOSE 8080
+CMD ["node", ".output/server/index.mjs"]

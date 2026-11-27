@@ -1,0 +1,3 @@
+# Used only to scaffold the independent baseline migration.
+# The actual local runtime is infra/backend/compose.yaml.
+project_id = "incasus-independent"

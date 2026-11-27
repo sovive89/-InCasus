@@ -9,7 +9,7 @@ export const listAuditLogs = createServerFn({ method: "POST" })
     return JSON.stringify((data ?? []).map((row): AuditEntry => ({
       id: row.id, actor: row.actor_label, occurredAt: row.occurred_at,
       entityType: row.entity_type as AuditEntry["entityType"], entityId: row.entity_id,
-      action: row.action, details: { camposAlterados: row.changed_fields },
+      action: row.action.toLowerCase() === "insert" ? "create" : row.action.toLowerCase(), details: { camposAlterados: row.changed_fields },
       before: row.before_data as AuditEntry["before"], after: row.after_data as AuditEntry["after"], source: "cloud",
     })));
   });
